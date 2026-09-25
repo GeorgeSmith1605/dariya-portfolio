@@ -3,371 +3,471 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dariya Renatkyzy — Graphic Designer & Brand Identity</title>
-  
-  <!-- Inter Font -->
+  <title>Dariya Renatkyzy — Graphic Designer</title>
+
+  <!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Clean Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#f4f6f8',
+            brandDark: '#1a2e2b',
+            accentTeal: '#2d6a4f',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0b0f17;
-      color: #f3f4f6;
+      background-color: #f4f6f8;
+      color: #1a2e2b;
+      overflow-x: hidden;
     }
-    #map {
-      height: 100%;
-      width: 100%;
-      background: #0b0f17;
+
+    /* Soft ambient water pool around island */
+    .water-glow {
+      background: radial-gradient(circle, rgba(167, 218, 222, 0.55) 0%, rgba(200, 235, 237, 0.3) 45%, rgba(244, 246, 248, 0) 72%);
     }
-    /* Hide Leaflet default attribution style to keep it clean */
-    .leaflet-control-attribution {
-      background: rgba(11, 15, 23, 0.8) !important;
-      color: #6b7280 !important;
-      font-size: 10px;
+
+    /* Interactive building hover & animation */
+    .iso-building {
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+      transform-origin: bottom center;
     }
-    .leaflet-control-attribution a {
-      color: #9ca3af !important;
+    .iso-building:hover {
+      transform: translateY(-8px) scale(1.03);
+      filter: drop-shadow(0 14px 12px rgba(26, 46, 43, 0.22));
     }
-    /* Custom glow pulse for map markers */
-    .custom-marker {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .iso-building.active {
+      transform: translateY(-10px) scale(1.05);
+      filter: drop-shadow(0 18px 16px rgba(45, 106, 79, 0.35));
     }
-    .pulse-dot {
-      width: 14px;
-      height: 14px;
-      background: #38bdf8;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 12px #38bdf8;
-      position: relative;
+
+    /* Tooltip badges over buildings */
+    .badge-label {
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
-    .pulse-dot.target-location {
-      background: #ec4899;
-      box-shadow: 0 0 16px #ec4899;
+    .iso-building:hover .badge-label,
+    .iso-building.active .badge-label {
+      opacity: 1 !important;
+      transform: translateY(-4px);
     }
-    .pulse-ring {
-      position: absolute;
-      width: 32px;
-      height: 32px;
-      border: 2px solid #38bdf8;
-      border-radius: 50%;
-      animation: pulsate 2s infinite ease-out;
-      opacity: 0;
+
+    /* Gentle floating island animation */
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
     }
-    .pulse-dot.target-location .pulse-ring {
-      border-color: #ec4899;
-    }
-    @keyframes pulsate {
-      0% { transform: scale(0.4); opacity: 1; }
-      100% { transform: scale(1.6); opacity: 0; }
-    }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #1f2937;
-      border-radius: 4px;
+    .floating-island {
+      animation: subtleFloat 6s ease-in-out infinite;
     }
   </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900">
 
-  <!-- Top Glass Bar (Acrokat-styled header) -->
-  <header class="absolute top-4 left-4 right-4 z-[1000] flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#111827]/85 backdrop-blur-md border border-gray-800 shadow-2xl transition-all">
-    <div class="flex items-center space-x-4">
-      <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-cyan-500 to-pink-500 flex items-center justify-center font-bold text-white shadow-lg">
-        DR
-      </div>
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-base font-bold text-white">Dariya Renatkyzy</h1>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
-            Based in Graz, Austria
-          </span>
+  <!-- Main Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 pt-10 pb-6 flex flex-col lg:flex-row items-center justify-between gap-10">
+    
+    <!-- Left Editorial Bio Section (acrokat style) -->
+    <div class="w-full lg:w-5/12 flex flex-col justify-center z-10">
+      <div class="space-y-4 max-w-md">
+        <h1 class="font-serif text-6xl md:text-7xl font-bold tracking-tight text-brandDark leading-[1.05]">
+          Dariya<br>
+          <span class="italic font-normal">Renatkyzy.</span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-[#3d5a53] font-medium pt-1">
+          Graphic Designer & Visual Identity Specialist
+        </p>
+
+        <p class="text-sm text-[#527068] leading-relaxed pt-2">
+          Currently based in <span class="font-semibold text-brandDark underline decoration-emerald-500 underline-offset-4">Graz, Austria</span>. Specialized in corporate branding, packaging, print pre-press, and digital graphics.
+        </p>
+
+        <!-- Social / Portfolio Icons -->
+        <div class="flex items-center gap-4 pt-4">
+          <a href="https://www.behance.net/dariyaaa" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-full bg-white shadow-sm border border-gray-200 hover:border-emerald-700 hover:shadow transition-all group" title="Behance Portfolio">
+            <svg class="w-5 h-5 text-brandDark group-hover:text-emerald-700 fill-current" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-4.995 3-3.66 0-5.731-2.482-5.731-5.88 0-3.616 2.378-5.88 5.48-5.88 3.513 0 5.16 2.453 4.908 5.88h-7.797c.078 1.867 1.341 3.23 3.324 3.23 1.583 0 2.616-.763 3.033-1.636l1.778 1.286zm-7.697-4.288h5.276c-.08-1.547-1.077-2.607-2.593-2.607-1.611 0-2.57 1.058-2.683 2.607zm-10.029-7.712h-6v14h6.052c3.084 0 4.948-1.57 4.948-4.208 0-1.748-1.041-2.997-2.399-3.48 1.05-.515 1.763-1.603 1.763-3.088 0-2.222-1.625-3.224-4.364-3.224zm-3.371 5.378h2.646c1.171 0 1.896.48 1.896 1.488 0 .973-.725 1.488-1.896 1.488h-2.646v-2.976zm0 4.673h2.896c1.294 0 2.083.535 2.083 1.631 0 1.1-.789 1.631-2.083 1.631h-2.896v-3.262z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/eldariya-renatkyzy-38b133359" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-full bg-white shadow-sm border border-gray-200 hover:border-emerald-700 hover:shadow transition-all group" title="LinkedIn Profile">
+            <svg class="w-5 h-5 text-brandDark group-hover:text-emerald-700 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="mailto:dariyaaa822@gmail.com" class="p-2.5 rounded-full bg-white shadow-sm border border-gray-200 hover:border-emerald-700 hover:shadow transition-all group" title="Send Email">
+            <svg class="w-5 h-5 text-brandDark group-hover:text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
         </div>
-        <p class="text-xs text-gray-400">Graphic Designer & Brand Identity Specialist</p>
+
+        <div class="pt-2 text-xs text-gray-500">
+          💡 Click any station on the island to view experience details.
+        </div>
       </div>
     </div>
 
-    <!-- Career Station Chips / Quick Nav -->
-    <nav class="hidden md:flex items-center space-x-2 text-xs font-medium">
-      <button onclick="focusStation('graz')" class="px-3 py-1.5 rounded-lg bg-pink-950/40 text-pink-300 border border-pink-800/60 hover:bg-pink-900/50 transition">
-        📍 Graz (Current)
-      </button>
-      <button onclick="focusStation('teploinvest')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
-        Teploinvest
-      </button>
-      <button onclick="focusStation('poligrafiya')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
-        Poligrafiya
-      </button>
-      <button onclick="focusStation('artum')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
-        Artum Print
-      </button>
-      <button onclick="focusStation('daryn')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
-        Daryn Online
-      </button>
-      <button onclick="focusStation('atu')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
-        ATU (Degree)
-      </button>
-    </nav>
+    <!-- Center/Right: Isometric Career Island -->
+    <div class="w-full lg:w-7/12 flex flex-col items-center relative justify-center">
+      
+      <!-- Water pool background -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="w-[520px] h-[520px] md:w-[620px] md:h-[620px] rounded-full water-glow"></div>
+      </div>
 
-    <!-- Direct Links -->
-    <div class="flex items-center space-x-2">
-      <a href="https://www.behance.net/dariyaaa" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600 hover:text-white transition flex items-center gap-1.5">
-        <span>Behance</span>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-      </a>
-      <a href="https://www.linkedin.com/in/eldariya-renatkyzy-38b133359" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600/20 text-sky-400 border border-sky-500/30 hover:bg-sky-600 hover:text-white transition flex items-center gap-1.5">
-        <span>LinkedIn</span>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-      </a>
-      <a href="mailto:dariyaaa822@gmail.com" class="p-1.5 text-gray-300 hover:text-white bg-gray-800/80 rounded-lg border border-gray-700 transition" title="Contact Email">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      </a>
+      <!-- Island SVG Canvas -->
+      <div class="floating-island relative w-full max-w-[620px] aspect-[4/3] flex items-center justify-center z-10">
+        <svg viewBox="0 0 800 600" class="w-full h-full drop-shadow-2xl overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
+          
+          <!-- Definitions: Gradients & Shadows -->
+          <defs>
+            <linearGradient id="cliffGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#b89372" />
+              <stop offset="100%" stop-color="#694d36" />
+            </linearGradient>
+            <linearGradient id="grassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#84c98b" />
+              <stop offset="100%" stop-color="#5fa367" />
+            </linearGradient>
+            <linearGradient id="roofPink" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f472b6" />
+              <stop offset="100%" stop-color="#db2777" />
+            </linearGradient>
+            <linearGradient id="roofNavy" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+            <linearGradient id="roofTeal" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#0284c7" />
+            </linearGradient>
+          </defs>
+
+          <!-- 1. Rock Base (Island Cliff) -->
+          <path d="M 170 340 
+                   C 170 430, 260 480, 400 480 
+                   C 540 480, 640 430, 640 340 
+                   C 640 360, 640 390, 620 420 
+                   C 560 490, 460 515, 390 515 
+                   C 290 515, 190 485, 170 410 Z" 
+                fill="url(#cliffGrad)" />
+
+          <!-- 2. Grass Top (Isometric Island Surface) -->
+          <ellipse cx="400" cy="340" rx="230" ry="110" fill="url(#grassGrad)" />
+
+          <!-- Winding Walkways / Paths -->
+          <path d="M 400 370 Q 340 340 310 270" stroke="#f1e2c3" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <path d="M 400 370 Q 470 350 510 280" stroke="#f1e2c3" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <path d="M 400 370 Q 390 410 400 430" stroke="#f1e2c3" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.85"/>
+
+          <!-- Decorative Trees -->
+          <g transform="translate(230, 310)">
+            <ellipse cx="0" cy="0" rx="14" ry="16" fill="#3b7a48" />
+            <ellipse cx="-4" cy="-5" rx="8" ry="10" fill="#4ea35f" />
+          </g>
+          <g transform="translate(560, 320)">
+            <ellipse cx="0" cy="0" rx="16" ry="18" fill="#3b7a48" />
+            <ellipse cx="-4" cy="-5" rx="10" ry="11" fill="#4ea35f" />
+          </g>
+          <g transform="translate(360, 240)">
+            <ellipse cx="0" cy="0" rx="12" ry="14" fill="#3b7a48" />
+          </g>
+
+          <!-- ==================== BUILDINGS (STATIONS) ==================== -->
+
+          <!-- BUILDING 1: GRAZ (Current Target / Studio) - Center Front -->
+          <g id="station-graz" class="iso-building active" onclick="selectStation('graz')">
+            <!-- Shadow -->
+            <ellipse cx="400" cy="425" rx="42" ry="18" fill="#1b382b" opacity="0.35"/>
+            <!-- Body -->
+            <polygon points="360,390 400,410 440,390 440,350 400,370 360,350" fill="#f8fafc" />
+            <polygon points="360,350 400,370 400,410 360,390" fill="#e2e8f0" />
+            <!-- Pink Roof / Highlight -->
+            <polygon points="360,350 400,325 440,350 400,370" fill="url(#roofPink)" />
+            <!-- Windows & Door -->
+            <polygon points="392,390 408,398 408,414 392,406" fill="#1e293b" />
+            <polygon points="370,366 385,373 385,385 370,378" fill="#38bdf8" />
+            <polygon points="415,366 430,358 430,370 415,378" fill="#38bdf8" />
+            <!-- Flag on Roof (Graz Pin) -->
+            <line x1="400" y1="325" x2="400" y2="300" stroke="#db2777" stroke-width="2.5" />
+            <polygon points="400,300 422,308 400,316" fill="#ec4899" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="1" transform="translate(400, 280)">
+              <rect x="-56" y="-14" width="112" height="22" rx="11" fill="#ec4899" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">📍 Graz (Current)</text>
+            </g>
+          </g>
+
+          <!-- BUILDING 2: TEPLOINVEST (Large Commercial Building) - Mid Right -->
+          <g id="station-teploinvest" class="iso-building" onclick="selectStation('teploinvest')">
+            <ellipse cx="495" cy="355" rx="38" ry="16" fill="#1b382b" opacity="0.3"/>
+            <!-- Body -->
+            <polygon points="460,330 495,350 535,325 535,285 495,305 460,285" fill="#cbd5e1" />
+            <polygon points="460,285 495,305 495,350 460,330" fill="#94a3b8" />
+            <!-- Roof -->
+            <polygon points="460,285 495,265 535,285 495,305" fill="url(#roofNavy)" />
+            <!-- Signboard -->
+            <rect x="475" y="308" width="40" height="10" fill="#f59e0b" rx="2" transform="skewY(14)"/>
+            <!-- Windows -->
+            <rect x="468" y="295" width="8" height="12" fill="#f8fafc" />
+            <rect x="480" y="300" width="8" height="12" fill="#f8fafc" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="0" transform="translate(495, 245)">
+              <rect x="-48" y="-12" width="96" height="20" rx="10" fill="#1e293b" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Teploinvest</text>
+            </g>
+          </g>
+
+          <!-- BUILDING 3: ATU UNIVERSITY (Classic Academic Tower) - Center Top -->
+          <g id="station-atu" class="iso-building" onclick="selectStation('atu')">
+            <ellipse cx="400" cy="285" rx="34" ry="14" fill="#1b382b" opacity="0.3"/>
+            <!-- Tower -->
+            <polygon points="380,265 400,277 420,265 420,205 400,215 380,205" fill="#fed7aa" />
+            <polygon points="380,205 400,215 400,277 380,265" fill="#fdba74" />
+            <!-- Spire Roof -->
+            <polygon points="400,165 380,205 420,205" fill="#c2410c" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="0" transform="translate(400, 150)">
+              <rect x="-44" y="-12" width="88" height="20" rx="10" fill="#c2410c" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">ATU Degree</text>
+            </g>
+          </g>
+
+          <!-- BUILDING 4: POLIGRAFIYA (Print Shop) - Mid Left -->
+          <g id="station-poligrafiya" class="iso-building" onclick="selectStation('poligrafiya')">
+            <ellipse cx="295" cy="340" rx="36" ry="15" fill="#1b382b" opacity="0.3"/>
+            <!-- Body -->
+            <polygon points="265,315 295,333 330,312 330,275 295,295 265,275" fill="#e0e7ff" />
+            <polygon points="265,275 295,295 295,333 265,315" fill="#c7d2fe" />
+            <!-- Cyan Roof -->
+            <polygon points="265,275 295,255 330,275 295,295" fill="url(#roofTeal)" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="0" transform="translate(295, 235)">
+              <rect x="-45" y="-12" width="90" height="20" rx="10" fill="#0369a1" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Poligrafiya</text>
+            </g>
+          </g>
+
+          <!-- BUILDING 5: ARTUM PRINT & DARYN (Media Studio) - Far Left -->
+          <g id="station-artum" class="iso-building" onclick="selectStation('artum')">
+            <ellipse cx="320" cy="390" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
+            <polygon points="295,370 320,385 345,370 345,340 320,355 295,340" fill="#fef08a" />
+            <polygon points="295,340 320,355 320,385 295,370" fill="#facc15" />
+            <polygon points="295,340 320,325 345,340 320,355" fill="#ca8a04" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="0" transform="translate(320, 305)">
+              <rect x="-46" y="-12" width="92" height="20" rx="10" fill="#854d0e" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Artum Print</text>
+            </g>
+          </g>
+
+          <g id="station-daryn" class="iso-building" onclick="selectStation('daryn')">
+            <ellipse cx="485" cy="405" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
+            <polygon points="465,390 485,402 510,390 510,360 485,372 465,360" fill="#bbf7d0" />
+            <polygon points="465,360 485,372 485,402 465,390" fill="#86efac" />
+            <polygon points="465,360 485,345 510,360 485,372" fill="#16a34a" />
+            <!-- Tooltip Badge -->
+            <g class="badge-label" opacity="0" transform="translate(485, 325)">
+              <rect x="-46" y="-12" width="92" height="20" rx="10" fill="#15803d" />
+              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Daryn Online</text>
+            </g>
+          </g>
+
+          <!-- Little Wooden Pier & Sailboat (recreating acrokat dock) -->
+          <polygon points="405,445 425,455 415,475 395,465" fill="#a16207" />
+          <line x1="395" y1="465" x2="395" y2="480" stroke="#78350f" stroke-width="3" />
+          <line x1="415" y1="475" x2="415" y2="490" stroke="#78350f" stroke-width="3" />
+          <!-- Sailboat -->
+          <polygon points="440,480 460,485 450,490" fill="#ffffff" stroke="#cbd5e1" />
+          <line x1="448" y1="482" x2="448" y2="466" stroke="#475569" stroke-width="1.5" />
+          <polygon points="448,467 458,477 448,477" fill="#f43f5e" />
+        </svg>
+      </div>
+
+      <!-- Station Switcher Buttons below the island (acrokat style controller) -->
+      <div class="flex flex-wrap items-center justify-center gap-1.5 mt-2 bg-white/70 backdrop-blur-md p-1.5 rounded-full border border-gray-200/80 shadow-sm z-20">
+        <button onclick="selectStation('graz')" id="btn-graz" class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-800 text-white transition">Graz</button>
+        <button onclick="selectStation('teploinvest')" id="btn-teploinvest" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Teploinvest</button>
+        <button onclick="selectStation('poligrafiya')" id="btn-poligrafiya" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Poligrafiya</button>
+        <button onclick="selectStation('artum')" id="btn-artum" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Artum</button>
+        <button onclick="selectStation('daryn')" id="btn-daryn" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Daryn</button>
+        <button onclick="selectStation('atu')" id="btn-atu" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">ATU</button>
+      </div>
     </div>
-  </header>
+  </main>
 
-  <!-- Interactive Map Canvas -->
-  <div id="map" class="z-0"></div>
-
-  <!-- Interactive Slide-over Experience Card -->
-  <aside id="infoPanel" class="absolute bottom-6 right-6 md:top-24 md:bottom-auto w-[calc(100vw-3rem)] md:w-96 max-h-[75vh] overflow-y-auto z-[1000] p-6 rounded-2xl bg-[#111827]/95 backdrop-blur-xl border border-gray-800 shadow-2xl transition-all duration-300">
-    <div id="panelContent">
-      <!-- Dynamic content injected via JavaScript -->
+  <!-- Interactive Slide-Up Drawer / Detail Card (Clean Minimal Card) -->
+  <section class="max-w-7xl w-full mx-auto px-6 lg:px-12 pb-12 z-20">
+    <div id="detailCard" class="bg-white rounded-3xl p-7 md:p-9 shadow-sm border border-gray-200/80 transition-all duration-300">
+      <!-- Injected via JavaScript -->
     </div>
-  </aside>
-
-  <!-- Quick Floating Footer Stats -->
-  <footer class="absolute bottom-6 left-6 z-[1000] hidden sm:flex items-center gap-2 p-2 rounded-xl bg-[#111827]/80 backdrop-blur-md border border-gray-800 text-xs text-gray-400">
-    <span class="flex items-center gap-1.5 px-2 py-1 bg-gray-800/60 rounded-md">
-      <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Adobe Suite & Figma
-    </span>
-    <span class="flex items-center gap-1.5 px-2 py-1 bg-gray-800/60 rounded-md">
-      <span class="w-2 h-2 rounded-full bg-pink-400"></span> Pre-press & Brand Identity
-    </span>
-    <button onclick="resetView()" class="px-2 py-1 hover:text-white transition underline">Reset View</button>
-  </footer>
+  </section>
 
   <script>
-    // Data Stations
-    const stations = {
+    const stationData = {
       graz: {
-        title: "Current Base: Graz, Austria",
+        title: "Current Focus: Graz, Austria",
         role: "Graphic Designer & Visual Identity Specialist",
         period: "2026 — Present",
         location: "Graz, Styria, Austria",
-        coords: [47.0707, 15.4395],
-        zoom: 12,
-        isTarget: true,
-        summary: "Available for on-site/hybrid positions in Graz, Vienna, and across Austria, as well as worldwide remote design contracts.",
+        badge: "Open for On-site / Hybrid / Remote",
+        badgeColor: "bg-emerald-100 text-emerald-800",
+        desc: "Based in Graz and actively seeking design opportunities across Austria (Graz, Vienna) and worldwide remote collaborations.",
         bullets: [
-          "Specialized in corporate brand identity, print pre-press, marketing collaterals, and digital design.",
-          "Strong command of typography, multi-page layout editorial design, and visual asset production.",
-          "Fluent in English (B2+ Professional) and Russian (Native/Fluent)."
+          "End-to-end brand identity design, logo systems, and visual guidelines.",
+          "Complete pre-press print preparation: multi-page publications, brochures, and packaging.",
+          "Proficient in English (B2+ Professional), Russian (Fluent C2), and Kazakh (Native).",
+          "Fast adaptation, deadline-driven execution, and meticulous attention to typography."
         ],
-        tags: ["On-site Graz", "Hybrid Austria", "Remote Worldwide", "Open for Contract & Full-time"]
+        tags: ["Brand Identity", "Editorial Design", "Pre-Press", "Packaging", "Figma", "Adobe Illustrator"]
       },
       teploinvest: {
         title: "Teploinvest",
         role: "Lead Graphic Designer",
         period: "Sep 2024 – Aug 2025 (1 Year)",
         location: "Almaty, Kazakhstan",
-        coords: [43.2389, 76.8897],
-        zoom: 13,
-        summary: "Led full-cycle graphic design for commercial heating, industrial solutions, and internal brand products.",
+        badge: "Commercial / Engineering Industry",
+        badgeColor: "bg-amber-100 text-amber-800",
+        desc: "Led visual identity and marketing asset creation for a prominent commercial and heating systems provider.",
         bullets: [
-          "Developed end-to-end multi-page product catalogs, corporate booklets, annual calendars, and branded packaging boxes.",
-          "Designed large-format outdoor advertising, exhibition banners, and point-of-sale visual materials.",
-          "Created digital marketing assets, website promotional graphics, and corporate social media animations.",
-          "Managed end-to-end pre-press file preparation ensuring strict print shop color profile adherence (CMYK/pantone)."
+          "Designed complete promotional catalogs, corporate booklets, annual calendars, and custom packaging boxes.",
+          "Ensured full brand consistency across website graphics, digital marketing collaterals, and social channels.",
+          "Created outdoor advertising, banners, and point-of-sale display materials.",
+          "Directly managed pre-press file validation and communicated with printing presses."
         ],
-        tags: ["Brand Guidelines", "Packaging", "Editorial Catalogues", "Pre-Press", "Outdoor Ads"]
+        tags: ["Catalogues", "Packaging Boxes", "Pre-press", "Outdoor Ads", "Adobe InDesign", "Photoshop"]
       },
       poligrafiya: {
         title: "Pervaya Operativnaya Poligrafiya",
         role: "Graphic & Pre-Press Production Designer",
         period: "May 2022 – Jul 2022 (3 Months)",
         location: "Almaty, Kazakhstan",
-        coords: [43.2551, 76.9126],
-        zoom: 13,
-        summary: "Fast-turnaround commercial printing house production and client identity design.",
+        badge: "Commercial Printing House",
+        badgeColor: "bg-sky-100 text-sky-800",
+        desc: "High-paced commercial printing house handling technical print layout and vector design.",
         bullets: [
-          "Engineered layouts for print editions, business stationery, and customized marketing collateral.",
-          "Logo design and vector asset optimization using CorelDRAW and Adobe Illustrator.",
-          "Advanced photo color correction, retouching, and preparation for digital and offset presses."
+          "Developed vector designs and layouts for multi-format print publications.",
+          "Created client logos and prepared high-fidelity vector layouts in CorelDRAW.",
+          "Performed advanced image color correction, resolution upscaling, and digital pre-press checks."
         ],
-        tags: ["CorelDRAW", "Commercial Printing", "Logo Development", "Color Calibration"]
+        tags: ["CorelDRAW", "Vector Graphics", "Commercial Pre-Press", "Color Calibration"]
       },
       artum: {
         title: "Artum Print",
         role: "Graphic & Production Designer",
         period: "Nov 2021 – Feb 2022 (4 Months)",
         location: "Almaty, Kazakhstan",
-        coords: [43.2625, 76.9450],
-        zoom: 13,
-        summary: "Marketing, BTL, PR, and print production agency.",
+        badge: "Media & Advertising Agency",
+        badgeColor: "bg-yellow-100 text-yellow-800",
+        desc: "Executed promotional visual campaigns, restaurant menus, and BTL marketing materials.",
         bullets: [
-          "Created restaurant menus, promotional brochures, outdoor banners, and corporate presentation packs.",
-          "Produced custom identity elements, logos, and vector illustrations for BTL/PR campaigns.",
-          "Ensured high-speed execution under strict commercial deadlines."
+          "Produced outdoor advertising banners, event booklets, and premium restaurant menus.",
+          "Designed logos and custom vector illustrations under fast-turnaround client deadlines.",
+          "Oversaw print file output quality and media asset distribution."
         ],
-        tags: ["BTL & PR Media", "Menu & Brochure Design", "Outdoor Banners", "Vector Art"]
+        tags: ["BTL Campaigns", "Menu Design", "Brochures", "Adobe Illustrator"]
       },
       daryn: {
         title: "Daryn Online",
-        role: "Social Media & Brand Identity Designer",
+        role: "Social Media & Brand Designer",
         period: "May 2021 – Jun 2021 (2 Months)",
         location: "Almaty, Kazakhstan",
-        coords: [43.2220, 76.8512],
-        zoom: 13,
-        summary: "Leading digital educational platform reaching millions of students.",
+        badge: "EdTech Platform",
+        badgeColor: "bg-green-100 text-green-800",
+        desc: "Developed comprehensive digital identity and social media visual assets for a top educational platform.",
         bullets: [
-          "Designed comprehensive social media visuals for Instagram, YouTube, and Facebook (posts, thumbnails, story templates).",
-          "Crafted branded office supplies, internal kits, and company visual identity guidelines.",
-          "Collaborated closely with marketing teams to boost digital engagement."
+          "Crafted branded social media post templates, YouTube covers, and Instagram stories.",
+          "Designed internal company branding kits and stationery accessories.",
+          "Collaborated directly with SMM and content teams to scale visual engagement."
         ],
-        tags: ["SMM Design", "Digital Identity", "Thumbnail Strategy", "Visual Guidelines"]
+        tags: ["SMM Design", "Digital Identity", "YouTube Graphics", "Canva / Figma"]
       },
       atu: {
         title: "Almaty Technological University (ATU)",
         role: "Bachelor's Degree in Graphic Design",
-        period: "Graduated 2024",
+        period: "Graduation Year: 2024",
         location: "Almaty, Kazakhstan",
-        coords: [43.2458, 76.9200],
-        zoom: 13,
-        summary: "Faculty of Design, Textile and Clothing Industry (FDTTIO).",
+        badge: "Higher Academic Education",
+        badgeColor: "bg-orange-100 text-orange-800",
+        desc: "Faculty of Design, Textile and Clothing Industry (FDTTIO).",
         bullets: [
-          "Core focus on Graphic Design, Typography, Visual Communications, and 3D Modeling.",
-          "Deep theoretical and practical foundation in color theory, composition, and design history."
+          "Comprehensive training in typography, composition, color theory, and visual communication.",
+          "Practical courses in 3D modeling and rendering using 3ds Max.",
+          "Defended thesis project in brand identity and packaging systems."
         ],
-        tags: ["Academic Degree", "3ds Max", "Typography", "Composition"]
+        tags: ["Typography", "Color Theory", "3ds Max", "Design Systems"]
       }
     };
 
-    // Initialize Leaflet Map with Dark Matter Carto tiles
-    const map = L.map('map', {
-      zoomControl: false,
-      attributionControl: true
-    }).setView([46.5, 45.0], 4); // Panoramic overview between Central Europe & Central Asia
+    function selectStation(key) {
+      const data = stationData[key];
+      if (!data) return;
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
+      // Update building visual states
+      document.querySelectorAll('.iso-building').forEach(el => el.classList.remove('active'));
+      const activeBuilding = document.getElementById('station-' + key);
+      if (activeBuilding) activeBuilding.classList.add('active');
 
-    // Zoom control in bottom right
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-    // Add Custom Markers
-    const markers = {};
-    Object.keys(stations).forEach(key => {
-      const item = stations[key];
-      const isTarget = item.isTarget;
-
-      const markerHtml = `
-        <div class="custom-marker">
-          <div class="pulse-dot ${isTarget ? 'target-location' : ''}">
-            <div class="pulse-ring"></div>
-          </div>
-        </div>
-      `;
-
-      const icon = L.divIcon({
-        className: 'marker-container',
-        html: markerHtml,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
+      // Update buttons
+      document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+        btn.className = "px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition";
       });
+      const activeBtn = document.getElementById('btn-' + key);
+      if (activeBtn) {
+        activeBtn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-800 text-white transition";
+      }
 
-      const marker = L.marker(item.coords, { icon: icon }).addTo(map);
-      marker.on('click', () => focusStation(key));
-      markers[key] = marker;
-    });
-
-    // Draw Curvature Flight Line between Career Foundation and Current Base in Graz
-    const latlngs = [
-      [43.2389, 76.8897], // Almaty
-      [47.0707, 15.4395]  // Graz
-    ];
-    const polyline = L.polyline(latlngs, {
-      color: '#38bdf8',
-      weight: 2,
-      opacity: 0.5,
-      dashArray: '6, 8'
-    }).addTo(map);
-
-    // Update Panel UI Function
-    function renderPanel(key) {
-      const item = stations[key];
-      const panel = document.getElementById('panelContent');
-      
-      panel.innerHTML = `
-        <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
-          <span class="font-mono uppercase tracking-wider">${item.period}</span>
-          <span class="text-cyan-400 font-medium">${item.location}</span>
+      // Render Card
+      const card = document.getElementById('detailCard');
+      card.innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-gray-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 font-sans">${data.period}</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full font-medium ${data.badgeColor}">${data.badge}</span>
+            </div>
+            <h2 class="font-serif text-3xl font-bold text-brandDark">${data.title}</h2>
+            <p class="text-base font-semibold text-emerald-800 pt-0.5">${data.role} — <span class="font-normal text-gray-500">${data.location}</span></p>
+          </div>
+          <a href="https://www.behance.net/dariyaaa" target="_blank" rel="noopener noreferrer" class="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold bg-brandDark text-white hover:bg-emerald-900 transition shadow-sm">
+            <span>Explore Portfolio</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
         </div>
-        <h2 class="text-xl font-bold text-white mb-0.5">${item.title}</h2>
-        <p class="text-sm font-semibold text-pink-400 mb-3">${item.role}</p>
-        
-        <p class="text-xs text-gray-300 leading-relaxed mb-4">${item.summary}</p>
-        
-        <div class="space-y-2 mb-5">
-          ${item.bullets.map(b => `
-            <div class="flex items-start text-xs text-gray-300">
-              <span class="text-cyan-400 mr-2 font-bold">•</span>
+
+        <p class="text-sm text-gray-600 leading-relaxed pt-5 max-w-3xl">${data.desc}</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-4">
+          ${data.bullets.map(b => `
+            <div class="flex items-start text-xs text-gray-700">
+              <span class="text-emerald-700 font-bold mr-2 text-sm leading-none">•</span>
               <span>${b}</span>
             </div>
           `).join('')}
         </div>
 
-        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-gray-800">
-          ${item.tags.map(t => `
-            <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-gray-800/80 text-gray-300 border border-gray-700/60">
+        <div class="flex flex-wrap gap-2 pt-6 mt-4 border-t border-gray-100">
+          ${data.tags.map(t => `
+            <span class="px-3 py-1 rounded-lg text-xs font-medium bg-[#edf2f0] text-brandDark">
               ${t}
             </span>
           `).join('')}
         </div>
-
-        <div class="mt-5 pt-3 flex gap-2">
-          <a href="https://www.behance.net/dariyaaa" target="_blank" class="flex-1 text-center py-2 px-3 text-xs font-semibold rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 transition">
-            View Design Portfolio
-          </a>
-        </div>
       `;
     }
 
-    // Function to pan & zoom to station
-    function focusStation(key) {
-      const item = stations[key];
-      map.flyTo(item.coords, item.zoom, {
-        animate: true,
-        duration: 1.5
-      });
-      renderPanel(key);
-    }
-
-    // Reset View
-    function resetView() {
-      map.flyTo([46.5, 45.0], 4, { duration: 1.5 });
-      renderPanel('graz');
-    }
-
-    // Default open on Graz (Current)
-    renderPanel('graz');
+    // Initialize with Graz
+    selectStation('graz');
   </script>
 </body>
 </html>
