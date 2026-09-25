@@ -7,11 +7,14 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- html2pdf for direct 1-click PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -39,12 +42,12 @@
     }
 
     .water-pool {
-      background: radial-gradient(ellipse at center, rgba(162, 219, 217, 0.7) 0%, rgba(193, 235, 233, 0.4) 45%, rgba(244, 246, 248, 0) 72%);
+      background: radial-gradient(ellipse at center, rgba(162, 219, 217, 0.75) 0%, rgba(193, 235, 233, 0.45) 45%, rgba(244, 246, 248, 0) 72%);
     }
 
     @keyframes islandFloat {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-5px); }
     }
     .island-container {
       animation: islandFloat 5.5s ease-in-out infinite;
@@ -70,22 +73,28 @@
       pointer-events: none;
     }
 
-    /* Print styles for German CV */
+    /* Print fix: Unroll complete document without clipping */
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printCvModal, #printCvModal * {
-        visibility: visible;
-      }
-      #printCvModal {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+      body {
         background: white !important;
-        color: black !important;
+      }
+      body > *:not(#cvModalOverlay) {
+        display: none !important;
+      }
+      #cvModalOverlay {
+        position: static !important;
         display: block !important;
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #cvModalCard {
+        max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        width: 100% !important;
       }
       .no-print {
         display: none !important;
@@ -95,16 +104,15 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-950">
 
-  <!-- Top Announcement Bar -->
-  <header class="max-w-7xl w-full mx-auto px-6 lg:px-12 pt-8 flex flex-wrap items-center justify-between gap-4">
+  <!-- Header -->
+  <header class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-12 pt-6 sm:pt-8 flex flex-wrap items-center justify-between gap-3">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-gray-200/80 shadow-sm text-xs font-medium text-emerald-900">
       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span>Available for Opportunities in Austria & Remote</span>
+      <span>Available in Austria & Remote</span>
     </div>
     
-    <div class="flex items-center gap-3">
-      <!-- Download CV Button in Header -->
-      <button onclick="openCvModal()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-gray-200 text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 shadow-sm transition">
+    <div class="flex items-center gap-2">
+      <button onclick="openCvModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-gray-200 text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 shadow-sm transition">
         <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         <span>Lebenslauf (PDF)</span>
       </button>
@@ -113,65 +121,65 @@
   </header>
 
   <!-- Hero Section -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-10">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-12 py-4 sm:py-6 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
     
     <!-- Left Column: Editorial Bio -->
-    <div class="w-full lg:w-5/12 flex flex-col justify-center z-10">
-      <div class="space-y-4 max-w-lg">
-        <h1 class="font-serif text-6xl sm:text-7xl font-bold tracking-tight text-brandDark leading-[1.03]">
+    <div class="w-full lg:w-5/12 flex flex-col justify-center z-10 pt-2 lg:pt-0">
+      <div class="space-y-3 sm:space-y-4 max-w-lg">
+        <h1 class="font-serif text-5xl sm:text-7xl font-bold tracking-tight text-brandDark leading-[1.05]">
           Dariya<br>
           <span class="italic font-normal">Renatkyzy.</span>
         </h1>
         
-        <p class="text-xl text-forest font-medium pt-1">
+        <p class="text-lg sm:text-xl text-forest font-medium">
           Graphic Designer & Visual Identity Specialist
         </p>
 
-        <p class="text-sm text-gray-600 leading-relaxed max-w-md">
+        <p class="text-sm text-gray-600 leading-relaxed">
           Currently based in <strong class="text-brandDark">Graz, Austria</strong>. Translating strategic brand narratives into rigorous print systems, packaging, multi-page catalogs, and digital graphics.
         </p>
 
         <!-- Social Channels & CV Action -->
-        <div class="flex flex-wrap items-center gap-3 pt-3">
+        <div class="flex flex-wrap items-center gap-2.5 pt-2">
           <a href="https://www.behance.net/dariyaaa" target="_blank" rel="noopener noreferrer" 
-             class="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-4.995 3-3.66 0-5.731-2.482-5.731-5.88 0-3.616 2.378-5.88 5.48-5.88 3.513 0 5.16 2.453 4.908 5.88h-7.797c.078 1.867 1.341 3.23 3.324 3.23 1.583 0 2.616-.763 3.033-1.636l1.778 1.286zm-7.697-4.288h5.276c-.08-1.547-1.077-2.607-2.593-2.607-1.611 0-2.57 1.058-2.683 2.607zm-10.029-7.712h-6v14h6.052c3.084 0 4.948-1.57 4.948-4.208 0-1.748-1.041-2.997-2.399-3.48 1.05-.515 1.763-1.603 1.763-3.088 0-2.222-1.625-3.224-4.364-3.224zm-3.371 5.378h2.646c1.171 0 1.896.48 1.896 1.488 0 .973-.725 1.488-1.896 1.488h-2.646v-2.976zm0 4.673h2.896c1.294 0 2.083.535 2.083 1.631 0 1.1-.789 1.631-2.083 1.631h-2.896v-3.262z"/></svg>
+             class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-4.995 3-3.66 0-5.731-2.482-5.731-5.88 0-3.616 2.378-5.88 5.48-5.88 3.513 0 5.16 2.453 4.908 5.88h-7.797c.078 1.867 1.341 3.23 3.324 3.23 1.583 0 2.616-.763 3.033-1.636l1.778 1.286zm-7.697-4.288h5.276c-.08-1.547-1.077-2.607-2.593-2.607-1.611 0-2.57 1.058-2.683 2.607zm-10.029-7.712h-6v14h6.052c3.084 0 4.948-1.57 4.948-4.208 0-1.748-1.041-2.997-2.399-3.48 1.05-.515 1.763-1.603 1.763-3.088 0-2.222-1.625-3.224-4.364-3.224zm-3.371 5.378h2.646c1.171 0 1.896.48 1.896 1.488 0 .973-.725 1.488-1.896 1.488h-2.646v-2.976zm0 4.673h2.896c1.294 0 2.083.535 2.083 1.631 0 1.1-.789 1.631-2.083 1.631h-2.896v-3.262z"/></svg>
             <span>Behance</span>
           </a>
           
           <a href="https://www.linkedin.com/in/eldariya-renatkyzy-38b133359" target="_blank" rel="noopener noreferrer" 
-             class="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+             class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-semibold text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
             <span>LinkedIn</span>
           </a>
 
           <a href="mailto:dariyaaa822@gmail.com" 
-             class="p-2.5 rounded-full bg-white border border-gray-200 shadow-sm text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all" title="Email Dariya">
+             class="p-2 rounded-full bg-white border border-gray-200 shadow-sm text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition-all" title="Email Dariya">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </a>
 
-          <button onclick="openCvModal()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-800 text-white shadow-sm text-xs font-semibold hover:bg-forest transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <button onclick="openCvModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-800 text-white shadow-sm text-xs font-semibold hover:bg-forest transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span>Download CV (DE)</span>
           </button>
         </div>
 
-        <p class="text-xs text-gray-400 pt-2 font-medium">
-          💡 Click any station on the island to view experience details.
+        <p class="text-xs text-gray-400 pt-1 font-medium">
+          💡 Tap any station on the island or use the pills below.
         </p>
       </div>
     </div>
 
-    <!-- Right Column: Interactive Island -->
-    <div class="w-full lg:w-7/12 flex flex-col items-center relative justify-center">
+    <!-- Right Column: Interactive Island (Mobile Enlarged & Responsive) -->
+    <div class="w-full lg:w-7/12 flex flex-col items-center relative justify-center px-0 sm:px-2">
       
       <!-- Water pool glow -->
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div class="w-[560px] h-[560px] md:w-[680px] md:h-[680px] rounded-full water-pool"></div>
+        <div class="w-[340px] h-[340px] sm:w-[540px] sm:h-[540px] lg:w-[680px] lg:h-[680px] rounded-full water-pool"></div>
       </div>
 
-      <!-- Island Canvas -->
-      <div class="island-container relative w-full max-w-[680px] aspect-[16/11] flex items-center justify-center z-10">
+      <!-- Island Canvas (Scale 115% on mobile via -mx) -->
+      <div class="island-container relative w-full -mx-4 sm:mx-0 max-w-[720px] aspect-[16/11] flex items-center justify-center z-10 scale-[1.08] sm:scale-100">
         <svg viewBox="0 0 850 600" class="w-full h-full drop-shadow-2xl overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
           
           <defs>
@@ -295,7 +303,7 @@
             <circle cx="420" cy="336" r="3.5" fill="#ffffff"/>
           </g>
 
-          <!-- Clean Pier on Water -->
+          <!-- Pier on Water -->
           <polygon points="425,475 448,487 438,506 415,494" fill="#854d0e" />
           <polygon points="465,515 490,520 478,526" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.5"/>
           <line x1="476" y1="517" x2="476" y2="500" stroke="#475569" stroke-width="1.5"/>
@@ -316,37 +324,43 @@
         </svg>
       </div>
 
-      <!-- Segmented Pill Controller -->
-      <nav class="flex flex-wrap items-center justify-center gap-1.5 mt-2 bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-gray-200/80 shadow-sm z-20">
-        <button onclick="selectStation('graz')" id="btn-graz" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-brandDark text-white shadow-sm transition">📍 Graz</button>
-        <button onclick="selectStation('teploinvest')" id="btn-teploinvest" class="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Teploinvest</button>
-        <button onclick="selectStation('poligrafiya')" id="btn-poligrafiya" class="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Poligrafiya</button>
-        <button onclick="selectStation('artum')" id="btn-artum" class="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Artum</button>
-        <button onclick="selectStation('daryn')" id="btn-daryn" class="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Daryn</button>
-        <button onclick="selectStation('atu')" id="btn-atu" class="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">ATU</button>
-      </nav>
+      <!-- Segmented Pill Controller (Horizontally scrollable on small phones) -->
+      <div class="w-full flex justify-center overflow-x-auto no-scrollbar py-1">
+        <nav class="flex items-center gap-1 sm:gap-1.5 mt-2 bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-gray-200/80 shadow-sm z-20 whitespace-nowrap">
+          <button onclick="selectStation('graz')" id="btn-graz" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brandDark text-white shadow-sm transition">📍 Graz</button>
+          <button onclick="selectStation('teploinvest')" id="btn-teploinvest" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Teploinvest</button>
+          <button onclick="selectStation('poligrafiya')" id="btn-poligrafiya" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Poligrafiya</button>
+          <button onclick="selectStation('artum')" id="btn-artum" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Artum</button>
+          <button onclick="selectStation('daryn')" id="btn-daryn" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Daryn</button>
+          <button onclick="selectStation('atu')" id="btn-atu" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">ATU</button>
+        </nav>
+      </div>
     </div>
   </main>
 
   <!-- Detailed Experience Panel -->
-  <section class="max-w-7xl w-full mx-auto px-6 lg:px-12 pb-14 z-20">
-    <div id="detailCard" class="bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-gray-200/80 transition-all duration-300">
-      <!-- Dynamic JS Content -->
+  <section class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-12 pb-14 z-20">
+    <div id="detailCard" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-200/80 transition-all duration-300">
+      <!-- Dynamic Content -->
     </div>
   </section>
 
-  <!-- German CV Modal / Printable Sheet -->
-  <div id="cvModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative">
-      <div class="flex items-center justify-between border-b pb-4 mb-6 no-print">
+  <!-- German CV Modal Sheet -->
+  <div id="cvModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
+    <div id="cvModalCard" class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b pb-4 mb-6 no-print">
         <div>
-          <h3 class="text-lg font-bold text-brandDark">Lebenslauf / Curriculum Vitae</h3>
+          <h3 class="text-lg font-bold text-brandDark">Lebenslauf (CV)</h3>
           <p class="text-xs text-gray-500">Optimiert für den österreichischen Arbeitsmarkt (DACH)</p>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="window.print()" class="px-4 py-2 bg-emerald-800 text-white rounded-full text-xs font-semibold hover:bg-forest transition flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-            <span>Drucken / Als PDF speichern</span>
+          <!-- 1-Click Direct Download Button -->
+          <button onclick="downloadCvPdfDirect()" class="px-4 py-2 bg-emerald-800 text-white rounded-full text-xs font-semibold hover:bg-forest transition flex items-center gap-1.5 shadow-sm">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>PDF direkt herunterladen</span>
+          </button>
+          <button onclick="window.print()" class="px-3 py-2 border border-gray-300 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-50 transition" title="Print dialog">
+            Drucken
           </button>
           <button onclick="closeCvModal()" class="p-2 text-gray-400 hover:text-gray-700 rounded-full">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -354,12 +368,12 @@
         </div>
       </div>
 
-      <!-- CV Content -->
-      <div id="printCvModal" class="space-y-6 text-sm text-gray-800">
+      <!-- CV Printable Content Container -->
+      <div id="cvContentSheet" class="space-y-6 text-sm text-gray-800 p-2">
         <div>
           <h2 class="font-serif text-3xl font-bold text-brandDark">Dariya Renatkyzy</h2>
           <p class="text-sm font-semibold text-emerald-800">Grafikdesignerin & Brand Identity Spezialistin</p>
-          <p class="text-xs text-gray-500 pt-1">Graz, Österreich • E-Mail: dariyaaa822@gmail.com • Portfolio: behance.net/dariyaaa</p>
+          <p class="text-xs text-gray-500 pt-1">Graz, Österreich • E-Mail: dariyaaa822@gmail.com • Portfolio: behance.net/dariyaaa • Tel: +7 (778) 0401733</p>
         </div>
 
         <div class="border-t pt-4">
@@ -370,28 +384,28 @@
                 <span class="text-brandDark">Lead Graphic Designer — Teploinvest</span>
                 <span class="text-xs text-gray-500">09/2024 – 08/2025</span>
               </div>
-              <p class="text-xs text-gray-600 mt-1">Konzeption mehrseitiger Kataloge, Verpackungsdesign, Außenwerbung und Pre-Press-Druckvorstufenprüfung.</p>
+              <p class="text-xs text-gray-600 mt-1">Konzeption und Reinzeichnung mehrseitiger Produktkataloge, Markenverpackungen, Außenwerbung und Druckvorstufenprüfung (Pre-Press).</p>
             </div>
             <div>
               <div class="flex justify-between items-baseline font-semibold">
                 <span class="text-brandDark">Grafik- & Pre-Press-Designerin — Erste Operative Druckerei</span>
                 <span class="text-xs text-gray-500">05/2022 – 07/2022</span>
               </div>
-              <p class="text-xs text-gray-600 mt-1">Farbprofil-Kalibrierung, Vektorisierung in CorelDRAW und technische Druckfreigabe für Offset- und Digitaldruck.</p>
+              <p class="text-xs text-gray-600 mt-1">Farbprofil-Kalibrierung (CMYK/Pantone), Vektor-Identitätsentwicklung in CorelDRAW und technische Druckfreigabe für Offset- und Digitaldruck.</p>
             </div>
             <div>
               <div class="flex justify-between items-baseline font-semibold">
                 <span class="text-brandDark">Grafikdesignerin — Artum Print</span>
                 <span class="text-xs text-gray-500">11/2021 – 02/2022</span>
               </div>
-              <p class="text-xs text-gray-600 mt-1">Gestaltung von Gastro-Speisekarten, BTL-Werbekampagnen, Broschüren und Plakatmedien.</p>
+              <p class="text-xs text-gray-600 mt-1">Gestaltung hochwertiger Gastronomie-Menüs, BTL-Werbekampagnen, Plakatserien und Werbebroschüren unter strikten Terminvorgaben.</p>
             </div>
             <div>
               <div class="flex justify-between items-baseline font-semibold">
                 <span class="text-brandDark">Social Media & Brand Designerin — Daryn Online</span>
                 <span class="text-xs text-gray-500">05/2021 – 06/2021</span>
               </div>
-              <p class="text-xs text-gray-600 mt-1">Branding-Kits, YouTube- und Instagram-Grafiken für eine führende Bildungsplattform.</p>
+              <p class="text-xs text-gray-600 mt-1">Ganzheitliche visuelle Betreuung von Social-Media-Kanälen (YouTube, Instagram) und Entwicklung von Corporate Branding Kits.</p>
             </div>
           </div>
         </div>
@@ -399,24 +413,25 @@
         <div class="border-t pt-4">
           <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Ausbildung</h4>
           <div class="flex justify-between items-baseline font-semibold">
-            <span class="text-brandDark">Bachelor in Grafikdesign — Technologische Universität Almaty (ATU)</span>
+            <span class="text-brandDark">Bachelorstudium Graphic Design — Technologische Universität Almaty (ATU)</span>
             <span class="text-xs text-gray-500">2020 – 2024</span>
           </div>
-          <p class="text-xs text-gray-600 mt-1">Fakultät für Design, Textil- und Bekleidungstechnologie (FDTTiO). Vertiefung in Typografie, 3D-Modellierung (3ds Max) und Identitätssysteme.</p>
+          <p class="text-xs text-gray-600 mt-1">Fakultät für Design, Textil- und Bekleidungstechnologie (FDTTiO). Fundierte Ausbildung in Typografie, 3D-Modellierung (3ds Max) und Markenarchitektur.</p>
         </div>
 
         <div class="border-t pt-4">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Kompetenzen & Software</h4>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Fachliche Kernkompetenzen</h4>
           <div class="flex flex-wrap gap-1.5 text-xs">
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">Adobe Illustrator</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">Adobe Photoshop</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">Adobe InDesign</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">Figma</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">CorelDRAW</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">Pre-Press (CMYK/Pantone)</span>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-lg">3ds Max</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Adobe Illustrator</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Adobe Photoshop</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Adobe InDesign</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Figma</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">CorelDRAW</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Druckvorstufe & Pre-Press</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">Verpackungsdesign</span>
+            <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-medium">3ds Max</span>
           </div>
-          <p class="text-xs text-gray-500 mt-3">Sprachen: Englisch (B2), Russisch (C2), Kasachisch (Muttersprache), Deutsch (Grundkenntnisse).</p>
+          <p class="text-xs text-gray-500 mt-3 font-medium">Sprachkenntnisse: Englisch (B2), Russisch (C2 / Verhandlungssicher), Kasachisch (Muttersprache), Deutsch (Grundkenntnisse / in Festigung).</p>
         </div>
       </div>
     </div>
@@ -544,11 +559,11 @@
       if (activeMesh) activeMesh.classList.add('active');
 
       document.querySelectorAll('nav button').forEach(btn => {
-        btn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition";
+        btn.className = "px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition";
       });
       const activeBtn = document.getElementById('btn-' + key);
       if (activeBtn) {
-        activeBtn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-brandDark text-white shadow-sm transition";
+        activeBtn.className = "px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold bg-brandDark text-white shadow-sm transition";
       }
 
       const card = document.getElementById('detailCard');
@@ -564,12 +579,12 @@
               ${data.role} <span class="font-normal text-gray-400 mx-1.5">•</span> <span class="font-normal text-gray-500">${data.location}</span>
             </p>
           </div>
-          <div class="flex items-center gap-3">
-            <button onclick="openCvModal()" class="px-5 py-2.5 rounded-full text-xs font-semibold border border-gray-300 bg-white text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition">
-              CV (DE) herunterladen
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="openCvModal()" class="px-4 py-2 rounded-full text-xs font-semibold border border-gray-300 bg-white text-brandDark hover:border-emerald-700 hover:text-emerald-800 transition">
+              Lebenslauf (DE)
             </button>
             <a href="https://www.behance.net/dariyaaa" target="_blank" rel="noopener noreferrer" 
-               class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold bg-brandDark text-white hover:bg-forest transition shadow-sm">
+               class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold bg-brandDark text-white hover:bg-forest transition shadow-sm">
               <span>Behance</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
@@ -603,6 +618,19 @@
 
     function closeCvModal() {
       document.getElementById('cvModalOverlay').classList.add('hidden');
+    }
+
+    // Direct 1-Click PDF Generation
+    function downloadCvPdfDirect() {
+      const element = document.getElementById('cvContentSheet');
+      const opt = {
+        margin:       10,
+        filename:     'Dariya_Renatkyzy_Lebenslauf.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
     }
 
     selectStation('graz');
