@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -38,12 +38,10 @@
       overflow-x: hidden;
     }
 
-    /* Ambient glowing water pool */
     .water-pool {
-      background: radial-gradient(ellipse at center, rgba(162, 219, 217, 0.65) 0%, rgba(193, 235, 233, 0.35) 45%, rgba(244, 246, 248, 0) 70%);
+      background: radial-gradient(ellipse at center, rgba(162, 219, 217, 0.7) 0%, rgba(193, 235, 233, 0.4) 45%, rgba(244, 246, 248, 0) 72%);
     }
 
-    /* Idle floating animation */
     @keyframes islandFloat {
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-6px); }
@@ -52,7 +50,6 @@
       animation: islandFloat 5.5s ease-in-out infinite;
     }
 
-    /* Building Meshes */
     .station-mesh {
       cursor: pointer;
       transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.28s ease;
@@ -68,7 +65,6 @@
       filter: drop-shadow(0 18px 16px rgba(45, 106, 79, 0.3));
     }
 
-    /* Smooth Floating Active Pin */
     #activePin {
       transition: transform 0.45s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.25s ease;
       pointer-events: none;
@@ -134,7 +130,7 @@
       </div>
     </div>
 
-    <!-- Right Column: Interactive Diorama Island -->
+    <!-- Right Column: Interactive Island -->
     <div class="w-full lg:w-7/12 flex flex-col items-center relative justify-center">
       
       <!-- Water pool glow -->
@@ -148,14 +144,14 @@
           
           <defs>
             <linearGradient id="grassPlateau" x1="10%" y1="0%" x2="90%" y2="100%">
-              <stop offset="0%" stop-color="#72b879"/>
-              <stop offset="60%" stop-color="#55995e"/>
-              <stop offset="100%" stop-color="#407747"/>
+              <stop offset="0%" stop-color="#6bb372"/>
+              <stop offset="60%" stop-color="#52995b"/>
+              <stop offset="100%" stop-color="#3d7544"/>
             </linearGradient>
 
             <linearGradient id="sandBorder" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#e9d8a6"/>
-              <stop offset="100%" stop-color="#caaf7a"/>
+              <stop offset="0%" stop-color="#eddcb2"/>
+              <stop offset="100%" stop-color="#d4b882"/>
             </linearGradient>
 
             <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
@@ -163,118 +159,145 @@
             </filter>
           </defs>
 
-          <!-- 1. ROCK CLIFF BASE (Clean Isometric Rock Terraces) -->
+          <!-- 1. ROCK CLIFF BASE (Natural isometric cliff faces, no random artifacts) -->
           <g id="cliff-base">
-            <polygon points="160,340 280,480 570,480 690,340 690,380 570,515 280,515 160,370" fill="#38291f" />
-            <polygon points="160,340 240,430 350,470 350,510 240,465 160,370" fill="#4d392b" />
-            <polygon points="350,470 510,475 510,515 350,510" fill="#5f4635" />
-            <polygon points="510,475 620,440 690,340 690,375 620,475 510,515" fill="#4a3629" />
+            <polygon points="170,340 280,480 570,480 680,340 680,375 570,510 280,510 170,370" fill="#38291f" />
+            <polygon points="170,340 240,430 350,470 350,505 240,465 170,370" fill="#4d392b" />
+            <polygon points="350,470 500,475 500,510 350,505" fill="#5f4635" />
+            <polygon points="500,475 610,440 680,340 680,375 610,475 500,510" fill="#4a3629" />
             <ellipse cx="425" cy="345" rx="275" ry="130" fill="url(#sandBorder)" />
           </g>
 
           <!-- 2. LUSH GRASS PLATEAU -->
           <ellipse cx="425" cy="340" rx="260" ry="118" fill="url(#grassPlateau)" />
 
-          <!-- Cobblestone Walkways -->
-          <g opacity="0.85">
-            <path d="M 425 380 Q 320 350 280 270" stroke="#f4ede1" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="1 1"/>
-            <path d="M 425 380 Q 530 360 570 275" stroke="#f4ede1" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="1 1"/>
-            <path d="M 425 380 Q 420 425 425 450" stroke="#f4ede1" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <!-- Cobblestone Walkways connecting the stations -->
+          <g opacity="0.8">
+            <path d="M 425 400 L 425 315" stroke="#f6ede1" stroke-width="14" stroke-linecap="round"/>
+            <path d="M 425 360 L 290 320" stroke="#f6ede1" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 425 360 L 555 330" stroke="#f6ede1" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 425 400 L 335 410" stroke="#f6ede1" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 425 400 L 495 410" stroke="#f6ede1" stroke-width="10" stroke-linecap="round"/>
           </g>
 
-          <!-- Ambient Trees -->
-          <g transform="translate(195, 300)">
+          <!-- Trees -->
+          <g transform="translate(200, 310)">
             <ellipse cx="0" cy="0" rx="14" ry="16" fill="#2d6a4f"/>
             <ellipse cx="-3" cy="-4" rx="9" ry="11" fill="#40916c"/>
           </g>
-          <g transform="translate(640, 310)">
+          <g transform="translate(635, 315)">
             <ellipse cx="0" cy="0" rx="16" ry="18" fill="#2d6a4f"/>
             <ellipse cx="-4" cy="-5" rx="10" ry="12" fill="#40916c"/>
           </g>
-          <g transform="translate(425, 230)">
+          <g transform="translate(425, 225)">
             <ellipse cx="0" cy="0" rx="12" ry="14" fill="#2d6a4f"/>
           </g>
 
-          <!-- ==================== 3. ARCHITECTURAL STATIONS (CLEANED) ==================== -->
+          <!-- ==================== 3. ARCHITECTURAL STATIONS (CLEAN ISOMETRIC) ==================== -->
 
-          <!-- 1. ATU UNIVERSITY (Classical Spire & Columns - Top Center) -->
+          <!-- 1. ATU UNIVERSITY (Classical Hall & Spire - Top Center) -->
           <g id="mesh-atu" class="station-mesh" onclick="selectStation('atu')">
-            <ellipse cx="425" cy="280" rx="36" ry="14" fill="#1b4332" opacity="0.3"/>
-            <polygon points="395,255 425,268 425,200 395,190" fill="#f8fafc"/>
-            <polygon points="425,268 455,255 455,190 425,200" fill="#cbd5e1"/>
-            <line x1="405" y1="260" x2="405" y2="200" stroke="#94a3b8" stroke-width="3"/>
-            <line x1="418" y1="265" x2="418" y2="202" stroke="#94a3b8" stroke-width="3"/>
-            <polygon points="390,190 425,205 460,190 425,140" fill="#c2410c"/>
-            <polygon points="390,190 425,140 425,205" fill="#ea580c"/>
+            <ellipse cx="425" cy="285" rx="36" ry="14" fill="#1b4332" opacity="0.3"/>
+            <!-- Main Block -->
+            <polygon points="395,260 425,275 455,260 455,200 425,212 395,200" fill="#f8fafc"/>
+            <polygon points="425,275 455,260 455,200 425,212" fill="#cbd5e1"/>
+            <!-- University Columns -->
+            <polygon points="405,255 412,258 412,216 405,212" fill="#94a3b8"/>
+            <polygon points="418,261 425,264 425,221 418,217" fill="#94a3b8"/>
+            <!-- Main Entrance Portal (Properly inside wall) -->
+            <polygon points="415,259 423,263 423,245 415,241" fill="#1e293b"/>
+            <!-- Spire & Pediment -->
+            <polygon points="390,200 425,215 460,200 425,145" fill="#c2410c"/>
+            <polygon points="425,215 460,200 425,145" fill="#9a3412"/>
           </g>
 
-          <!-- 2. POLIGRAFIYA (Industrial Print Studio - Left) -->
+          <!-- 2. POLIGRAFIYA (Print Studio - Left) -->
           <g id="mesh-poligrafiya" class="station-mesh" onclick="selectStation('poligrafiya')">
             <ellipse cx="280" cy="340" rx="38" ry="15" fill="#1b4332" opacity="0.3"/>
-            <polygon points="245,315 280,332 320,312 320,265 280,285 245,265" fill="#f1f5f9"/>
-            <polygon points="245,265 280,285 280,332 245,315" fill="#cbd5e1"/>
-            <polygon points="245,265 280,245 320,265 280,285" fill="#0284c7"/>
-            <polygon points="255,285 272,293 272,315 255,307" fill="#38bdf8" opacity="0.85"/>
-            <polygon points="288,295 310,284 310,305 288,316" fill="#0369a1" opacity="0.4"/>
+            <!-- Walls -->
+            <polygon points="250,315 285,332 320,312 320,265 285,285 250,265" fill="#f1f5f9"/>
+            <polygon points="285,332 320,312 320,265 285,285" fill="#cbd5e1"/>
+            <!-- Cyan Sawtooth Roof -->
+            <polygon points="250,265 285,245 320,265 285,285" fill="#0284c7"/>
+            <!-- Grid Windows (Left Wall) -->
+            <polygon points="258,285 272,292 272,305 258,298" fill="#38bdf8" opacity="0.9"/>
+            <!-- Studio Door (Properly seated on Left Wall) -->
+            <polygon points="275,310 282,314 282,328 275,324" fill="#0f172a"/>
           </g>
 
-          <!-- 3. ARTUM PRINT (Creative Boutique - Bottom Left) -->
+          <!-- 3. ARTUM PRINT (Creative Studio - Bottom Left) -->
           <g id="mesh-artum" class="station-mesh" onclick="selectStation('artum')">
-            <ellipse cx="320" cy="405" rx="32" ry="14" fill="#1b4332" opacity="0.25"/>
-            <polygon points="290,385 320,400 350,385 350,345 320,360 290,345" fill="#fffbeb"/>
-            <polygon points="290,345 320,360 320,400 290,385" fill="#fde68a"/>
-            <polygon points="290,345 320,325 350,345 320,360" fill="#d97706"/>
-            <polygon points="312,380 326,387 326,400 312,393" fill="#78350f"/>
+            <ellipse cx="325" cy="405" rx="30" ry="13" fill="#1b4332" opacity="0.25"/>
+            <!-- Walls -->
+            <polygon points="300,385 325,398 355,382 355,345 325,360 300,345" fill="#fffbeb"/>
+            <polygon points="325,398 355,382 355,345 325,360" fill="#fde68a"/>
+            <!-- Warm Roof -->
+            <polygon points="300,345 325,328 355,345 325,360" fill="#d97706"/>
+            <!-- Window -->
+            <polygon points="306,360 316,365 316,375 306,370" fill="#92400e" opacity="0.75"/>
+            <!-- Doorway (Right side of wall) -->
+            <polygon points="320,380 324,382 324,395 320,393" fill="#78350f"/>
           </g>
 
-          <!-- 4. TEPLOINVEST (Corporate Office - Right, Cleaned & Detailed) -->
+          <!-- 4. TEPLOINVEST (Corporate Office - Right) -->
           <g id="mesh-teploinvest" class="station-mesh" onclick="selectStation('teploinvest')">
             <ellipse cx="560" cy="345" rx="42" ry="16" fill="#1b4332" opacity="0.3"/>
-            <!-- Main Corporate Block -->
-            <polygon points="520,320 560,342 605,318 605,260 560,280 520,260" fill="#f8fafc"/>
-            <polygon points="520,260 560,280 560,342 520,320" fill="#cbd5e1"/>
-            <!-- Angled Rooftop -->
-            <polygon points="520,260 560,238 605,260 560,280" fill="#334155"/>
-            <!-- Office Glazing Panels -->
-            <polygon points="530,285 548,294 548,318 530,308" fill="#38bdf8" opacity="0.85"/>
-            <polygon points="570,296 592,284 592,308 570,320" fill="#0f172a" opacity="0.45"/>
+            <!-- Left & Right Main Walls -->
+            <polygon points="525,320 560,340 600,318 600,260 560,280 525,260" fill="#f8fafc"/>
+            <polygon points="560,340 600,318 600,260 560,280" fill="#cbd5e1"/>
+            <!-- Modern Dark Slanted Roof -->
+            <polygon points="525,260 560,238 600,260 560,280" fill="#334155"/>
+            <!-- Windows Left Facade -->
+            <polygon points="535,282 550,290 550,300 535,292" fill="#0284c7" opacity="0.8"/>
+            <!-- Entrance Doorway (Inside left wall) -->
+            <polygon points="540,312 552,319 552,333 540,326" fill="#1e293b"/>
+            <!-- Windows Right Facade -->
+            <polygon points="570,295 588,285 588,295 570,305" fill="#0f172a" opacity="0.4"/>
           </g>
 
-          <!-- 5. DARYN ONLINE (Digital / Media Center - Bottom Right) -->
+          <!-- 5. DARYN ONLINE (Digital Media Studio - Bottom Right) -->
           <g id="mesh-daryn" class="station-mesh" onclick="selectStation('daryn')">
-            <ellipse cx="505" cy="415" rx="34" ry="14" fill="#1b4332" opacity="0.25"/>
-            <polygon points="475,395 505,410 535,395 535,355 505,370 475,355" fill="#f0fdf4"/>
-            <polygon points="475,355 505,370 505,410 475,395" fill="#bbf7d0"/>
-            <polygon points="475,355 505,335 535,355 505,370" fill="#16a34a"/>
-            <polygon points="498,390 512,397 512,410 498,403" fill="#14532d"/>
+            <ellipse cx="505" cy="415" rx="32" ry="13" fill="#1b4332" opacity="0.25"/>
+            <!-- Walls -->
+            <polygon points="480,395 505,408 535,392 535,355 505,370 480,355" fill="#f0fdf4"/>
+            <polygon points="505,408 535,392 535,355 505,370" fill="#bbf7d0"/>
+            <!-- Emerald Roof -->
+            <polygon points="480,355 505,338 535,355 505,370" fill="#16a34a"/>
+            <!-- Modern Window Panel -->
+            <polygon points="486,370 496,375 496,386 486,381" fill="#059669" opacity="0.8"/>
+            <!-- Glass Doorway (Contained within right front corner) -->
+            <polygon points="508,392 516,388 516,400 508,404" fill="#064e3b"/>
           </g>
 
           <!-- 6. GRAZ (Uhrturm Style - Front Center) -->
           <g id="mesh-graz" class="station-mesh active" onclick="selectStation('graz')">
             <ellipse cx="425" cy="450" rx="46" ry="18" fill="#1b4332" opacity="0.35"/>
+            <!-- Base House -->
             <polygon points="385,410 425,432 465,410 465,360 425,382 385,360" fill="#ffffff"/>
-            <polygon points="385,360 425,382 425,432 385,410" fill="#e2e8f0"/>
+            <polygon points="425,432 465,410 465,360 425,382" fill="#e2e8f0"/>
+            <!-- Windows Base -->
+            <polygon points="395,380 408,387 408,400 395,393" fill="#0284c7" opacity="0.8"/>
+            <!-- Main Arched Doorway (Inside left wall) -->
+            <polygon points="415,408 424,413 424,429 415,424" fill="#1e293b"/>
             <!-- Tower Turret -->
             <polygon points="410,360 425,368 440,360 440,315 425,322 410,315" fill="#f8fafc"/>
-            <polygon points="410,315 425,322 425,368 410,360" fill="#cbd5e1"/>
+            <polygon points="425,368 440,360 440,315 425,322" fill="#cbd5e1"/>
             <!-- Clock Tower Roof -->
             <polygon points="400,315 425,285 450,315 425,328" fill="#e11d48"/>
-            <polygon points="400,315 425,285 425,328" fill="#be123c"/>
+            <polygon points="425,285 450,315 425,328" fill="#be123c"/>
+            <!-- Clock Face -->
             <circle cx="420" cy="336" r="4.5" fill="#0f172a"/>
             <circle cx="420" cy="336" r="3.5" fill="#ffffff"/>
-            <polygon points="398,380 412,388 412,408 398,400" fill="#0284c7" opacity="0.8"/>
-            <polygon points="420,412 432,418 432,434 420,428" fill="#1e293b"/>
           </g>
 
-          <!-- Dock & Sailboat -->
-          <polygon points="425,475 450,488 438,510 412,498" fill="#78350f" />
-          <line x1="412" y1="498" x2="412" y2="520" stroke="#451a03" stroke-width="3"/>
-          <line x1="438" y1="510" x2="438" y2="530" stroke="#451a03" stroke-width="3"/>
-          <polygon points="470,520 495,526 480,532" fill="#ffffff" stroke="#cbd5e1"/>
-          <line x1="482" y1="522" x2="482" y2="505" stroke="#475569" stroke-width="1.5"/>
-          <polygon points="482,506 494,517 482,517" fill="#e11d48"/>
+          <!-- Clean Wooden Pier on the Water -->
+          <polygon points="425,475 448,487 438,506 415,494" fill="#854d0e" />
+          <!-- Small Sailboat -->
+          <polygon points="465,515 490,520 478,526" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.5"/>
+          <line x1="476" y1="517" x2="476" y2="500" stroke="#475569" stroke-width="1.5"/>
+          <polygon points="476,502 488,512 476,512" fill="#e11d48"/>
 
-          <!-- ==================== 4. DYNAMIC FLOATING PIN ==================== -->
+          <!-- ==================== 4. DYNAMIC FLOATING BADGE ==================== -->
           <g id="activePin" transform="translate(425, 255)">
             <g filter="url(#softShadow)">
               <rect x="-85" y="-18" width="170" height="36" rx="18" fill="#12201c"/>
@@ -354,7 +377,7 @@
         badge: "Commercial Print House",
         badgeColor: "bg-sky-100 text-sky-800 border border-sky-200",
         pinText: "🖨️ Poligrafiya",
-        pinCoords: [280, 220],
+        pinCoords: [285, 220],
         desc: "Fast-turnaround commercial printing environment specializing in precise pre-press engineering and vector branding.",
         bullets: [
           "Developed vector designs and technical layouts for high-volume commercial print publications.",
@@ -371,7 +394,7 @@
         badge: "Media & Advertising Agency",
         badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
         pinText: "🎨 Artum Print",
-        pinCoords: [320, 295],
+        pinCoords: [325, 295],
         desc: "Marketing, BTL, PR, and print production agency serving commercial retail and hospitality clients.",
         bullets: [
           "Designed outdoor advertising banners, event booklets, and premium hospitality menus.",
