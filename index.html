@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dariya Renatkyzy — Graphic Designer</title>
 
-  <!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Clean Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -36,41 +35,42 @@
       overflow-x: hidden;
     }
 
-    /* Soft ambient water pool around island */
     .water-glow {
       background: radial-gradient(circle, rgba(167, 218, 222, 0.55) 0%, rgba(200, 235, 237, 0.3) 45%, rgba(244, 246, 248, 0) 72%);
     }
 
-    /* Interactive building hover & animation */
-    .iso-building {
+    /* Building Interactive Styles */
+    .building-mesh {
       cursor: pointer;
       transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
-      transform-origin: bottom center;
+      transform-box: fill-box;
+      transform-origin: center bottom;
     }
-    .iso-building:hover {
-      transform: translateY(-8px) scale(1.03);
-      filter: drop-shadow(0 14px 12px rgba(26, 46, 43, 0.22));
+    .building-mesh:hover {
+      transform: translateY(-6px);
+      filter: drop-shadow(0 12px 10px rgba(26, 46, 43, 0.25));
     }
-    .iso-building.active {
-      transform: translateY(-10px) scale(1.05);
-      filter: drop-shadow(0 18px 16px rgba(45, 106, 79, 0.35));
-    }
-
-    /* Tooltip badges over buildings */
-    .badge-label {
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-    .iso-building:hover .badge-label,
-    .iso-building.active .badge-label {
-      opacity: 1 !important;
-      transform: translateY(-4px);
+    .building-mesh.active {
+      transform: translateY(-8px);
+      filter: drop-shadow(0 16px 14px rgba(45, 106, 79, 0.35));
     }
 
-    /* Gentle floating island animation */
+    /* UI Station Badges */
+    .station-badge {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .station-badge:hover text,
+    .station-badge.active text {
+      font-weight: 800;
+    }
+    .station-badge:hover rect {
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
     @keyframes subtleFloat {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-7px); }
+      50% { transform: translateY(-6px); }
     }
     .floating-island {
       animation: subtleFloat 6s ease-in-out infinite;
@@ -79,10 +79,10 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900">
 
-  <!-- Main Layout -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 pt-10 pb-6 flex flex-col lg:flex-row items-center justify-between gap-10">
+  <!-- Main Hero Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 pt-8 pb-4 flex flex-col lg:flex-row items-center justify-between gap-8">
     
-    <!-- Left Editorial Bio Section (acrokat style) -->
+    <!-- Left Editorial Bio Section -->
     <div class="w-full lg:w-5/12 flex flex-col justify-center z-10">
       <div class="space-y-4 max-w-md">
         <h1 class="font-serif text-6xl md:text-7xl font-bold tracking-tight text-brandDark leading-[1.05]">
@@ -94,12 +94,12 @@
           Graphic Designer & Visual Identity Specialist
         </p>
 
-        <p class="text-sm text-[#527068] leading-relaxed pt-2">
-          Currently based in <span class="font-semibold text-brandDark underline decoration-emerald-500 underline-offset-4">Graz, Austria</span>. Specialized in corporate branding, packaging, print pre-press, and digital graphics.
+        <p class="text-sm text-[#527068] leading-relaxed pt-1">
+          Currently based in <span class="font-semibold text-brandDark underline decoration-emerald-500 underline-offset-4">Graz, Austria</span>. Open for on-site, hybrid, and remote design opportunities.
         </p>
 
-        <!-- Social / Portfolio Icons -->
-        <div class="flex items-center gap-4 pt-4">
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3 pt-3">
           <a href="https://www.behance.net/dariyaaa" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-full bg-white shadow-sm border border-gray-200 hover:border-emerald-700 hover:shadow transition-all group" title="Behance Portfolio">
             <svg class="w-5 h-5 text-brandDark group-hover:text-emerald-700 fill-current" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-4.995 3-3.66 0-5.731-2.482-5.731-5.88 0-3.616 2.378-5.88 5.48-5.88 3.513 0 5.16 2.453 4.908 5.88h-7.797c.078 1.867 1.341 3.23 3.324 3.23 1.583 0 2.616-.763 3.033-1.636l1.778 1.286zm-7.697-4.288h5.276c-.08-1.547-1.077-2.607-2.593-2.607-1.611 0-2.57 1.058-2.683 2.607zm-10.029-7.712h-6v14h6.052c3.084 0 4.948-1.57 4.948-4.208 0-1.748-1.041-2.997-2.399-3.48 1.05-.515 1.763-1.603 1.763-3.088 0-2.222-1.625-3.224-4.364-3.224zm-3.371 5.378h2.646c1.171 0 1.896.48 1.896 1.488 0 .973-.725 1.488-1.896 1.488h-2.646v-2.976zm0 4.673h2.896c1.294 0 2.083.535 2.083 1.631 0 1.1-.789 1.631-2.083 1.631h-2.896v-3.262z"/></svg>
           </a>
@@ -111,25 +111,23 @@
           </a>
         </div>
 
-        <div class="pt-2 text-xs text-gray-500">
+        <p class="text-xs text-gray-400 pt-2 font-medium">
           💡 Click any station on the island to view experience details.
-        </div>
+        </p>
       </div>
     </div>
 
     <!-- Center/Right: Isometric Career Island -->
     <div class="w-full lg:w-7/12 flex flex-col items-center relative justify-center">
       
-      <!-- Water pool background -->
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div class="w-[520px] h-[520px] md:w-[620px] md:h-[620px] rounded-full water-glow"></div>
       </div>
 
-      <!-- Island SVG Canvas -->
-      <div class="floating-island relative w-full max-w-[620px] aspect-[4/3] flex items-center justify-center z-10">
-        <svg viewBox="0 0 800 600" class="w-full h-full drop-shadow-2xl overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
+      <!-- SVG Canvas -->
+      <div class="floating-island relative w-full max-w-[640px] aspect-[4/3] flex items-center justify-center z-10">
+        <svg viewBox="0 0 800 620" class="w-full h-full drop-shadow-xl overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
           
-          <!-- Definitions: Gradients & Shadows -->
           <defs>
             <linearGradient id="cliffGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stop-color="#b89372" />
@@ -153,149 +151,136 @@
             </linearGradient>
           </defs>
 
-          <!-- 1. Rock Base (Island Cliff) -->
-          <path d="M 170 340 
-                   C 170 430, 260 480, 400 480 
-                   C 540 480, 640 430, 640 340 
-                   C 640 360, 640 390, 620 420 
-                   C 560 490, 460 515, 390 515 
-                   C 290 515, 190 485, 170 410 Z" 
+          <!-- 1. Rock Base -->
+          <path d="M 170 350 
+                   C 170 440, 260 490, 400 490 
+                   C 540 490, 640 440, 640 350 
+                   C 640 370, 640 400, 620 430 
+                   C 560 500, 460 525, 390 525 
+                   C 290 525, 190 495, 170 420 Z" 
                 fill="url(#cliffGrad)" />
 
-          <!-- 2. Grass Top (Isometric Island Surface) -->
-          <ellipse cx="400" cy="340" rx="230" ry="110" fill="url(#grassGrad)" />
+          <!-- 2. Grass Top -->
+          <ellipse cx="400" cy="350" rx="230" ry="115" fill="url(#grassGrad)" />
 
-          <!-- Winding Walkways / Paths -->
-          <path d="M 400 370 Q 340 340 310 270" stroke="#f1e2c3" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.85"/>
-          <path d="M 400 370 Q 470 350 510 280" stroke="#f1e2c3" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.85"/>
-          <path d="M 400 370 Q 390 410 400 430" stroke="#f1e2c3" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <!-- Paths -->
+          <path d="M 400 380 Q 330 350 310 280" stroke="#f1e2c3" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <path d="M 400 380 Q 470 360 520 290" stroke="#f1e2c3" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <path d="M 400 380 Q 395 420 400 440" stroke="#f1e2c3" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.85"/>
 
-          <!-- Decorative Trees -->
-          <g transform="translate(230, 310)">
+          <!-- Foliage -->
+          <g transform="translate(230, 320)">
             <ellipse cx="0" cy="0" rx="14" ry="16" fill="#3b7a48" />
             <ellipse cx="-4" cy="-5" rx="8" ry="10" fill="#4ea35f" />
           </g>
-          <g transform="translate(560, 320)">
+          <g transform="translate(570, 330)">
             <ellipse cx="0" cy="0" rx="16" ry="18" fill="#3b7a48" />
             <ellipse cx="-4" cy="-5" rx="10" ry="11" fill="#4ea35f" />
           </g>
-          <g transform="translate(360, 240)">
-            <ellipse cx="0" cy="0" rx="12" ry="14" fill="#3b7a48" />
+
+          <!-- ==================== 3. BUILDINGS (ISOMETRIC MESHES) ==================== -->
+
+          <!-- 1. GRAZ (Front Center) -->
+          <g id="b-graz" class="building-mesh active" onclick="selectStation('graz')">
+            <ellipse cx="400" cy="430" rx="42" ry="18" fill="#1b382b" opacity="0.3"/>
+            <polygon points="360,395 400,415 440,395 440,355 400,375 360,355" fill="#f8fafc" />
+            <polygon points="360,355 400,375 400,415 360,395" fill="#e2e8f0" />
+            <polygon points="360,355 400,330 440,355 400,375" fill="url(#roofPink)" />
+            <polygon points="392,395 408,403 408,419 392,411" fill="#1e293b" />
+            <polygon points="370,371 385,378 385,390 370,383" fill="#38bdf8" />
+            <polygon points="415,371 430,363 430,375 415,383" fill="#38bdf8" />
           </g>
 
-          <!-- ==================== BUILDINGS (STATIONS) ==================== -->
-
-          <!-- BUILDING 1: GRAZ (Current Target / Studio) - Center Front -->
-          <g id="station-graz" class="iso-building active" onclick="selectStation('graz')">
-            <!-- Shadow -->
-            <ellipse cx="400" cy="425" rx="42" ry="18" fill="#1b382b" opacity="0.35"/>
-            <!-- Body -->
-            <polygon points="360,390 400,410 440,390 440,350 400,370 360,350" fill="#f8fafc" />
-            <polygon points="360,350 400,370 400,410 360,390" fill="#e2e8f0" />
-            <!-- Pink Roof / Highlight -->
-            <polygon points="360,350 400,325 440,350 400,370" fill="url(#roofPink)" />
-            <!-- Windows & Door -->
-            <polygon points="392,390 408,398 408,414 392,406" fill="#1e293b" />
-            <polygon points="370,366 385,373 385,385 370,378" fill="#38bdf8" />
-            <polygon points="415,366 430,358 430,370 415,378" fill="#38bdf8" />
-            <!-- Flag on Roof (Graz Pin) -->
-            <line x1="400" y1="325" x2="400" y2="300" stroke="#db2777" stroke-width="2.5" />
-            <polygon points="400,300 422,308 400,316" fill="#ec4899" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="1" transform="translate(400, 280)">
-              <rect x="-56" y="-14" width="112" height="22" rx="11" fill="#ec4899" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">📍 Graz (Current)</text>
-            </g>
+          <!-- 2. TEPLOINVEST (Right) -->
+          <g id="b-teploinvest" class="building-mesh" onclick="selectStation('teploinvest')">
+            <ellipse cx="500" cy="365" rx="38" ry="16" fill="#1b382b" opacity="0.3"/>
+            <polygon points="465,340 500,360 540,335 540,295 500,315 465,295" fill="#cbd5e1" />
+            <polygon points="465,295 500,315 500,360 465,340" fill="#94a3b8" />
+            <polygon points="465,295 500,275 540,295 500,315" fill="url(#roofNavy)" />
+            <rect x="473" y="305" width="8" height="12" fill="#f8fafc" />
+            <rect x="485" y="310" width="8" height="12" fill="#f8fafc" />
           </g>
 
-          <!-- BUILDING 2: TEPLOINVEST (Large Commercial Building) - Mid Right -->
-          <g id="station-teploinvest" class="iso-building" onclick="selectStation('teploinvest')">
-            <ellipse cx="495" cy="355" rx="38" ry="16" fill="#1b382b" opacity="0.3"/>
-            <!-- Body -->
-            <polygon points="460,330 495,350 535,325 535,285 495,305 460,285" fill="#cbd5e1" />
-            <polygon points="460,285 495,305 495,350 460,330" fill="#94a3b8" />
-            <!-- Roof -->
-            <polygon points="460,285 495,265 535,285 495,305" fill="url(#roofNavy)" />
-            <!-- Signboard -->
-            <rect x="475" y="308" width="40" height="10" fill="#f59e0b" rx="2" transform="skewY(14)"/>
-            <!-- Windows -->
-            <rect x="468" y="295" width="8" height="12" fill="#f8fafc" />
-            <rect x="480" y="300" width="8" height="12" fill="#f8fafc" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="0" transform="translate(495, 245)">
-              <rect x="-48" y="-12" width="96" height="20" rx="10" fill="#1e293b" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Teploinvest</text>
-            </g>
+          <!-- 3. ATU UNIVERSITY (Back Center Spire) -->
+          <g id="b-atu" class="building-mesh" onclick="selectStation('atu')">
+            <ellipse cx="400" cy="290" rx="34" ry="14" fill="#1b382b" opacity="0.3"/>
+            <polygon points="380,270 400,282 420,270 420,210 400,220 380,210" fill="#fed7aa" />
+            <polygon points="380,210 400,220 400,282 380,270" fill="#fdba74" />
+            <polygon points="400,170 380,210 420,210" fill="#c2410c" />
           </g>
 
-          <!-- BUILDING 3: ATU UNIVERSITY (Classic Academic Tower) - Center Top -->
-          <g id="station-atu" class="iso-building" onclick="selectStation('atu')">
-            <ellipse cx="400" cy="285" rx="34" ry="14" fill="#1b382b" opacity="0.3"/>
-            <!-- Tower -->
-            <polygon points="380,265 400,277 420,265 420,205 400,215 380,205" fill="#fed7aa" />
-            <polygon points="380,205 400,215 400,277 380,265" fill="#fdba74" />
-            <!-- Spire Roof -->
-            <polygon points="400,165 380,205 420,205" fill="#c2410c" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="0" transform="translate(400, 150)">
-              <rect x="-44" y="-12" width="88" height="20" rx="10" fill="#c2410c" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">ATU Degree</text>
-            </g>
+          <!-- 4. POLIGRAFIYA (Left) -->
+          <g id="b-poligrafiya" class="building-mesh" onclick="selectStation('poligrafiya')">
+            <ellipse cx="295" cy="350" rx="36" ry="15" fill="#1b382b" opacity="0.3"/>
+            <polygon points="265,325 295,343 330,322 330,285 295,305 265,285" fill="#e0e7ff" />
+            <polygon points="265,285 295,305 295,343 265,325" fill="#c7d2fe" />
+            <polygon points="265,285 295,265 330,285 295,305" fill="url(#roofTeal)" />
           </g>
 
-          <!-- BUILDING 4: POLIGRAFIYA (Print Shop) - Mid Left -->
-          <g id="station-poligrafiya" class="iso-building" onclick="selectStation('poligrafiya')">
-            <ellipse cx="295" cy="340" rx="36" ry="15" fill="#1b382b" opacity="0.3"/>
-            <!-- Body -->
-            <polygon points="265,315 295,333 330,312 330,275 295,295 265,275" fill="#e0e7ff" />
-            <polygon points="265,275 295,295 295,333 265,315" fill="#c7d2fe" />
-            <!-- Cyan Roof -->
-            <polygon points="265,275 295,255 330,275 295,295" fill="url(#roofTeal)" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="0" transform="translate(295, 235)">
-              <rect x="-45" y="-12" width="90" height="20" rx="10" fill="#0369a1" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Poligrafiya</text>
-            </g>
+          <!-- 5. ARTUM PRINT (Far Left) -->
+          <g id="b-artum" class="building-mesh" onclick="selectStation('artum')">
+            <ellipse cx="320" cy="400" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
+            <polygon points="295,380 320,395 345,380 345,350 320,365 295,350" fill="#fef08a" />
+            <polygon points="295,350 320,365 320,395 295,380" fill="#facc15" />
+            <polygon points="295,350 320,335 345,350 320,365" fill="#ca8a04" />
           </g>
 
-          <!-- BUILDING 5: ARTUM PRINT & DARYN (Media Studio) - Far Left -->
-          <g id="station-artum" class="iso-building" onclick="selectStation('artum')">
-            <ellipse cx="320" cy="390" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
-            <polygon points="295,370 320,385 345,370 345,340 320,355 295,340" fill="#fef08a" />
-            <polygon points="295,340 320,355 320,385 295,370" fill="#facc15" />
-            <polygon points="295,340 320,325 345,340 320,355" fill="#ca8a04" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="0" transform="translate(320, 305)">
-              <rect x="-46" y="-12" width="92" height="20" rx="10" fill="#854d0e" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Artum Print</text>
-            </g>
+          <!-- 6. DARYN ONLINE (Far Right) -->
+          <g id="b-daryn" class="building-mesh" onclick="selectStation('daryn')">
+            <ellipse cx="485" cy="415" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
+            <polygon points="465,400 485,412 510,400 510,370 485,382 465,370" fill="#bbf7d0" />
+            <polygon points="465,370 485,382 485,412 465,400" fill="#86efac" />
+            <polygon points="465,370 485,355 510,370 485,382" fill="#16a34a" />
           </g>
 
-          <g id="station-daryn" class="iso-building" onclick="selectStation('daryn')">
-            <ellipse cx="485" cy="405" rx="30" ry="12" fill="#1b382b" opacity="0.25"/>
-            <polygon points="465,390 485,402 510,390 510,360 485,372 465,360" fill="#bbf7d0" />
-            <polygon points="465,360 485,372 485,402 465,390" fill="#86efac" />
-            <polygon points="465,360 485,345 510,360 485,372" fill="#16a34a" />
-            <!-- Tooltip Badge -->
-            <g class="badge-label" opacity="0" transform="translate(485, 325)">
-              <rect x="-46" y="-12" width="92" height="20" rx="10" fill="#15803d" />
-              <text x="0" y="1" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">Daryn Online</text>
-            </g>
+          <!-- Dock & Sailboat -->
+          <polygon points="405,455 425,465 415,485 395,475" fill="#a16207" />
+          <polygon points="440,490 460,495 450,500" fill="#ffffff" stroke="#cbd5e1" />
+          <polygon points="448,477 458,487 448,487" fill="#f43f5e" />
+
+          <!-- ==================== 4. STATION BADGES (FIXED OVERLAY) ==================== -->
+          
+          <!-- ATU Badge -->
+          <g id="badge-atu" class="station-badge" onclick="selectStation('atu')">
+            <rect x="330" y="130" width="140" height="30" rx="15" fill="#c2410c" />
+            <text x="400" y="150" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">🎓 ATU Degree</text>
           </g>
 
-          <!-- Little Wooden Pier & Sailboat (recreating acrokat dock) -->
-          <polygon points="405,445 425,455 415,475 395,465" fill="#a16207" />
-          <line x1="395" y1="465" x2="395" y2="480" stroke="#78350f" stroke-width="3" />
-          <line x1="415" y1="475" x2="415" y2="490" stroke="#78350f" stroke-width="3" />
-          <!-- Sailboat -->
-          <polygon points="440,480 460,485 450,490" fill="#ffffff" stroke="#cbd5e1" />
-          <line x1="448" y1="482" x2="448" y2="466" stroke="#475569" stroke-width="1.5" />
-          <polygon points="448,467 458,477 448,477" fill="#f43f5e" />
+          <!-- Poligrafiya Badge -->
+          <g id="badge-poligrafiya" class="station-badge" onclick="selectStation('poligrafiya')">
+            <rect x="225" y="225" width="140" height="30" rx="15" fill="#0284c7" />
+            <text x="295" y="245" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">🖨️ Poligrafiya</text>
+          </g>
+
+          <!-- Teploinvest Badge -->
+          <g id="badge-teploinvest" class="station-badge" onclick="selectStation('teploinvest')">
+            <rect x="430" y="235" width="140" height="30" rx="15" fill="#1e293b" />
+            <text x="500" y="255" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">🏢 Teploinvest</text>
+          </g>
+
+          <!-- Artum Print Badge -->
+          <g id="badge-artum" class="station-badge" onclick="selectStation('artum')">
+            <rect x="245" y="305" width="130" height="30" rx="15" fill="#854d0e" />
+            <text x="310" y="325" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">🎨 Artum Print</text>
+          </g>
+
+          <!-- Daryn Online Badge -->
+          <g id="badge-daryn" class="station-badge" onclick="selectStation('daryn')">
+            <rect x="420" y="320" width="130" height="30" rx="15" fill="#15803d" />
+            <text x="485" y="340" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">📱 Daryn Online</text>
+          </g>
+
+          <!-- Graz (Current Target) Badge -->
+          <g id="badge-graz" class="station-badge active" onclick="selectStation('graz')">
+            <rect x="315" y="290" width="170" height="34" rx="17" fill="#db2777" stroke="#ffffff" stroke-width="2"/>
+            <text x="400" y="312" fill="#ffffff" font-size="14" font-weight="800" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif">📍 Graz (Current)</text>
+          </g>
+
         </svg>
       </div>
 
-      <!-- Station Switcher Buttons below the island (acrokat style controller) -->
-      <div class="flex flex-wrap items-center justify-center gap-1.5 mt-2 bg-white/70 backdrop-blur-md p-1.5 rounded-full border border-gray-200/80 shadow-sm z-20">
+      <!-- Quick Island Controller -->
+      <div class="flex flex-wrap items-center justify-center gap-1.5 mt-3 bg-white/80 backdrop-blur-md p-1.5 rounded-full border border-gray-200/80 shadow-sm z-20">
         <button onclick="selectStation('graz')" id="btn-graz" class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-800 text-white transition">Graz</button>
         <button onclick="selectStation('teploinvest')" id="btn-teploinvest" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Teploinvest</button>
         <button onclick="selectStation('poligrafiya')" id="btn-poligrafiya" class="px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition">Poligrafiya</button>
@@ -306,10 +291,10 @@
     </div>
   </main>
 
-  <!-- Interactive Slide-Up Drawer / Detail Card (Clean Minimal Card) -->
+  <!-- Interactive Detail Card -->
   <section class="max-w-7xl w-full mx-auto px-6 lg:px-12 pb-12 z-20">
     <div id="detailCard" class="bg-white rounded-3xl p-7 md:p-9 shadow-sm border border-gray-200/80 transition-all duration-300">
-      <!-- Injected via JavaScript -->
+      <!-- Dynamic JS Content -->
     </div>
   </section>
 
@@ -321,7 +306,7 @@
         period: "2026 — Present",
         location: "Graz, Styria, Austria",
         badge: "Open for On-site / Hybrid / Remote",
-        badgeColor: "bg-emerald-100 text-emerald-800",
+        badgeColor: "bg-pink-100 text-pink-800",
         desc: "Based in Graz and actively seeking design opportunities across Austria (Graz, Vienna) and worldwide remote collaborations.",
         bullets: [
           "End-to-end brand identity design, logo systems, and visual guidelines.",
@@ -337,7 +322,7 @@
         period: "Sep 2024 – Aug 2025 (1 Year)",
         location: "Almaty, Kazakhstan",
         badge: "Commercial / Engineering Industry",
-        badgeColor: "bg-amber-100 text-amber-800",
+        badgeColor: "bg-slate-100 text-slate-800",
         desc: "Led visual identity and marketing asset creation for a prominent commercial and heating systems provider.",
         bullets: [
           "Designed complete promotional catalogs, corporate booklets, annual calendars, and custom packaging boxes.",
@@ -383,7 +368,7 @@
         period: "May 2021 – Jun 2021 (2 Months)",
         location: "Almaty, Kazakhstan",
         badge: "EdTech Platform",
-        badgeColor: "bg-green-100 text-green-800",
+        badgeColor: "bg-emerald-100 text-emerald-800",
         desc: "Developed comprehensive digital identity and social media visual assets for a top educational platform.",
         bullets: [
           "Crafted branded social media post templates, YouTube covers, and Instagram stories.",
@@ -413,12 +398,24 @@
       const data = stationData[key];
       if (!data) return;
 
-      // Update building visual states
-      document.querySelectorAll('.iso-building').forEach(el => el.classList.remove('active'));
-      const activeBuilding = document.getElementById('station-' + key);
-      if (activeBuilding) activeBuilding.classList.add('active');
+      // Update building meshes
+      document.querySelectorAll('.building-mesh').forEach(el => el.classList.remove('active'));
+      const activeB = document.getElementById('b-' + key);
+      if (activeB) activeB.classList.add('active');
 
-      // Update buttons
+      // Update SVG badges
+      document.querySelectorAll('.station-badge').forEach(b => {
+        b.classList.remove('active');
+        b.querySelector('rect').setAttribute('stroke', 'none');
+      });
+      const activeBadge = document.getElementById('badge-' + key);
+      if (activeBadge) {
+        activeBadge.classList.add('active');
+        activeBadge.querySelector('rect').setAttribute('stroke', '#ffffff');
+        activeBadge.querySelector('rect').setAttribute('stroke-width', '2');
+      }
+
+      // Update bottom buttons
       document.querySelectorAll('[id^="btn-"]').forEach(btn => {
         btn.className = "px-3 py-1 rounded-full text-xs font-medium text-gray-600 hover:text-brandDark transition";
       });
@@ -427,7 +424,7 @@
         activeBtn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-800 text-white transition";
       }
 
-      // Render Card
+      // Render Card Content
       const card = document.getElementById('detailCard');
       card.innerHTML = `
         <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-gray-100 pb-5">
@@ -466,7 +463,6 @@
       `;
     }
 
-    // Initialize with Graz
     selectStation('graz');
   </script>
 </body>
