@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dariya Renatkyzy — Graphic Designer & Brand Identity</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f17;
+      color: #f3f4f6;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+      background: #0b0f17;
+    }
+    /* Hide Leaflet default attribution style to keep it clean */
+    .leaflet-control-attribution {
+      background: rgba(11, 15, 23, 0.8) !important;
+      color: #6b7280 !important;
+      font-size: 10px;
+    }
+    .leaflet-control-attribution a {
+      color: #9ca3af !important;
+    }
+    /* Custom glow pulse for map markers */
+    .custom-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pulse-dot {
+      width: 14px;
+      height: 14px;
+      background: #38bdf8;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #38bdf8;
+      position: relative;
+    }
+    .pulse-dot.target-location {
+      background: #ec4899;
+      box-shadow: 0 0 16px #ec4899;
+    }
+    .pulse-ring {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border: 2px solid #38bdf8;
+      border-radius: 50%;
+      animation: pulsate 2s infinite ease-out;
+      opacity: 0;
+    }
+    .pulse-dot.target-location .pulse-ring {
+      border-color: #ec4899;
+    }
+    @keyframes pulsate {
+      0% { transform: scale(0.4); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f2937;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Top Glass Bar (Acrokat-styled header) -->
+  <header class="absolute top-4 left-4 right-4 z-[1000] flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#111827]/85 backdrop-blur-md border border-gray-800 shadow-2xl transition-all">
+    <div class="flex items-center space-x-4">
+      <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-cyan-500 to-pink-500 flex items-center justify-center font-bold text-white shadow-lg">
+        DR
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-bold text-white">Dariya Renatkyzy</h1>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+            Based in Graz, Austria
+          </span>
+        </div>
+        <p class="text-xs text-gray-400">Graphic Designer & Brand Identity Specialist</p>
+      </div>
+    </div>
+
+    <!-- Career Station Chips / Quick Nav -->
+    <nav class="hidden md:flex items-center space-x-2 text-xs font-medium">
+      <button onclick="focusStation('graz')" class="px-3 py-1.5 rounded-lg bg-pink-950/40 text-pink-300 border border-pink-800/60 hover:bg-pink-900/50 transition">
+        📍 Graz (Current)
+      </button>
+      <button onclick="focusStation('teploinvest')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
+        Teploinvest
+      </button>
+      <button onclick="focusStation('poligrafiya')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
+        Poligrafiya
+      </button>
+      <button onclick="focusStation('artum')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
+        Artum Print
+      </button>
+      <button onclick="focusStation('daryn')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
+        Daryn Online
+      </button>
+      <button onclick="focusStation('atu')" class="px-3 py-1.5 rounded-lg bg-gray-800/70 text-gray-300 border border-gray-700/60 hover:text-white hover:bg-gray-750 transition">
+        ATU (Degree)
+      </button>
+    </nav>
+
+    <!-- Direct Links -->
+    <div class="flex items-center space-x-2">
+      <a href="https://www.behance.net/dariyaaa" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600 hover:text-white transition flex items-center gap-1.5">
+        <span>Behance</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/eldariya-renatkyzy-38b133359" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600/20 text-sky-400 border border-sky-500/30 hover:bg-sky-600 hover:text-white transition flex items-center gap-1.5">
+        <span>LinkedIn</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+      <a href="mailto:dariyaaa822@gmail.com" class="p-1.5 text-gray-300 hover:text-white bg-gray-800/80 rounded-lg border border-gray-700 transition" title="Contact Email">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Interactive Map Canvas -->
+  <div id="map" class="z-0"></div>
+
+  <!-- Interactive Slide-over Experience Card -->
+  <aside id="infoPanel" class="absolute bottom-6 right-6 md:top-24 md:bottom-auto w-[calc(100vw-3rem)] md:w-96 max-h-[75vh] overflow-y-auto z-[1000] p-6 rounded-2xl bg-[#111827]/95 backdrop-blur-xl border border-gray-800 shadow-2xl transition-all duration-300">
+    <div id="panelContent">
+      <!-- Dynamic content injected via JavaScript -->
+    </div>
+  </aside>
+
+  <!-- Quick Floating Footer Stats -->
+  <footer class="absolute bottom-6 left-6 z-[1000] hidden sm:flex items-center gap-2 p-2 rounded-xl bg-[#111827]/80 backdrop-blur-md border border-gray-800 text-xs text-gray-400">
+    <span class="flex items-center gap-1.5 px-2 py-1 bg-gray-800/60 rounded-md">
+      <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Adobe Suite & Figma
+    </span>
+    <span class="flex items-center gap-1.5 px-2 py-1 bg-gray-800/60 rounded-md">
+      <span class="w-2 h-2 rounded-full bg-pink-400"></span> Pre-press & Brand Identity
+    </span>
+    <button onclick="resetView()" class="px-2 py-1 hover:text-white transition underline">Reset View</button>
+  </footer>
+
+  <script>
+    // Data Stations
+    const stations = {
+      graz: {
+        title: "Current Base: Graz, Austria",
+        role: "Graphic Designer & Visual Identity Specialist",
+        period: "2026 — Present",
+        location: "Graz, Styria, Austria",
+        coords: [47.0707, 15.4395],
+        zoom: 12,
+        isTarget: true,
+        summary: "Available for on-site/hybrid positions in Graz, Vienna, and across Austria, as well as worldwide remote design contracts.",
+        bullets: [
+          "Specialized in corporate brand identity, print pre-press, marketing collaterals, and digital design.",
+          "Strong command of typography, multi-page layout editorial design, and visual asset production.",
+          "Fluent in English (B2+ Professional) and Russian (Native/Fluent)."
+        ],
+        tags: ["On-site Graz", "Hybrid Austria", "Remote Worldwide", "Open for Contract & Full-time"]
+      },
+      teploinvest: {
+        title: "Teploinvest",
+        role: "Lead Graphic Designer",
+        period: "Sep 2024 – Aug 2025 (1 Year)",
+        location: "Almaty, Kazakhstan",
+        coords: [43.2389, 76.8897],
+        zoom: 13,
+        summary: "Led full-cycle graphic design for commercial heating, industrial solutions, and internal brand products.",
+        bullets: [
+          "Developed end-to-end multi-page product catalogs, corporate booklets, annual calendars, and branded packaging boxes.",
+          "Designed large-format outdoor advertising, exhibition banners, and point-of-sale visual materials.",
+          "Created digital marketing assets, website promotional graphics, and corporate social media animations.",
+          "Managed end-to-end pre-press file preparation ensuring strict print shop color profile adherence (CMYK/pantone)."
+        ],
+        tags: ["Brand Guidelines", "Packaging", "Editorial Catalogues", "Pre-Press", "Outdoor Ads"]
+      },
+      poligrafiya: {
+        title: "Pervaya Operativnaya Poligrafiya",
+        role: "Graphic & Pre-Press Production Designer",
+        period: "May 2022 – Jul 2022 (3 Months)",
+        location: "Almaty, Kazakhstan",
+        coords: [43.2551, 76.9126],
+        zoom: 13,
+        summary: "Fast-turnaround commercial printing house production and client identity design.",
+        bullets: [
+          "Engineered layouts for print editions, business stationery, and customized marketing collateral.",
+          "Logo design and vector asset optimization using CorelDRAW and Adobe Illustrator.",
+          "Advanced photo color correction, retouching, and preparation for digital and offset presses."
+        ],
+        tags: ["CorelDRAW", "Commercial Printing", "Logo Development", "Color Calibration"]
+      },
+      artum: {
+        title: "Artum Print",
+        role: "Graphic & Production Designer",
+        period: "Nov 2021 – Feb 2022 (4 Months)",
+        location: "Almaty, Kazakhstan",
+        coords: [43.2625, 76.9450],
+        zoom: 13,
+        summary: "Marketing, BTL, PR, and print production agency.",
+        bullets: [
+          "Created restaurant menus, promotional brochures, outdoor banners, and corporate presentation packs.",
+          "Produced custom identity elements, logos, and vector illustrations for BTL/PR campaigns.",
+          "Ensured high-speed execution under strict commercial deadlines."
+        ],
+        tags: ["BTL & PR Media", "Menu & Brochure Design", "Outdoor Banners", "Vector Art"]
+      },
+      daryn: {
+        title: "Daryn Online",
+        role: "Social Media & Brand Identity Designer",
+        period: "May 2021 – Jun 2021 (2 Months)",
+        location: "Almaty, Kazakhstan",
+        coords: [43.2220, 76.8512],
+        zoom: 13,
+        summary: "Leading digital educational platform reaching millions of students.",
+        bullets: [
+          "Designed comprehensive social media visuals for Instagram, YouTube, and Facebook (posts, thumbnails, story templates).",
+          "Crafted branded office supplies, internal kits, and company visual identity guidelines.",
+          "Collaborated closely with marketing teams to boost digital engagement."
+        ],
+        tags: ["SMM Design", "Digital Identity", "Thumbnail Strategy", "Visual Guidelines"]
+      },
+      atu: {
+        title: "Almaty Technological University (ATU)",
+        role: "Bachelor's Degree in Graphic Design",
+        period: "Graduated 2024",
+        location: "Almaty, Kazakhstan",
+        coords: [43.2458, 76.9200],
+        zoom: 13,
+        summary: "Faculty of Design, Textile and Clothing Industry (FDTTIO).",
+        bullets: [
+          "Core focus on Graphic Design, Typography, Visual Communications, and 3D Modeling.",
+          "Deep theoretical and practical foundation in color theory, composition, and design history."
+        ],
+        tags: ["Academic Degree", "3ds Max", "Typography", "Composition"]
+      }
+    };
+
+    // Initialize Leaflet Map with Dark Matter Carto tiles
+    const map = L.map('map', {
+      zoomControl: false,
+      attributionControl: true
+    }).setView([46.5, 45.0], 4); // Panoramic overview between Central Europe & Central Asia
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Zoom control in bottom right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Add Custom Markers
+    const markers = {};
+    Object.keys(stations).forEach(key => {
+      const item = stations[key];
+      const isTarget = item.isTarget;
+
+      const markerHtml = `
+        <div class="custom-marker">
+          <div class="pulse-dot ${isTarget ? 'target-location' : ''}">
+            <div class="pulse-ring"></div>
+          </div>
+        </div>
+      `;
+
+      const icon = L.divIcon({
+        className: 'marker-container',
+        html: markerHtml,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+
+      const marker = L.marker(item.coords, { icon: icon }).addTo(map);
+      marker.on('click', () => focusStation(key));
+      markers[key] = marker;
+    });
+
+    // Draw Curvature Flight Line between Career Foundation and Current Base in Graz
+    const latlngs = [
+      [43.2389, 76.8897], // Almaty
+      [47.0707, 15.4395]  // Graz
+    ];
+    const polyline = L.polyline(latlngs, {
+      color: '#38bdf8',
+      weight: 2,
+      opacity: 0.5,
+      dashArray: '6, 8'
+    }).addTo(map);
+
+    // Update Panel UI Function
+    function renderPanel(key) {
+      const item = stations[key];
+      const panel = document.getElementById('panelContent');
+      
+      panel.innerHTML = `
+        <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
+          <span class="font-mono uppercase tracking-wider">${item.period}</span>
+          <span class="text-cyan-400 font-medium">${item.location}</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-0.5">${item.title}</h2>
+        <p class="text-sm font-semibold text-pink-400 mb-3">${item.role}</p>
+        
+        <p class="text-xs text-gray-300 leading-relaxed mb-4">${item.summary}</p>
+        
+        <div class="space-y-2 mb-5">
+          ${item.bullets.map(b => `
+            <div class="flex items-start text-xs text-gray-300">
+              <span class="text-cyan-400 mr-2 font-bold">•</span>
+              <span>${b}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-gray-800">
+          ${item.tags.map(t => `
+            <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-gray-800/80 text-gray-300 border border-gray-700/60">
+              ${t}
+            </span>
+          `).join('')}
+        </div>
+
+        <div class="mt-5 pt-3 flex gap-2">
+          <a href="https://www.behance.net/dariyaaa" target="_blank" class="flex-1 text-center py-2 px-3 text-xs font-semibold rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 transition">
+            View Design Portfolio
+          </a>
+        </div>
+      `;
+    }
+
+    // Function to pan & zoom to station
+    function focusStation(key) {
+      const item = stations[key];
+      map.flyTo(item.coords, item.zoom, {
+        animate: true,
+        duration: 1.5
+      });
+      renderPanel(key);
+    }
+
+    // Reset View
+    function resetView() {
+      map.flyTo([46.5, 45.0], 4, { duration: 1.5 });
+      renderPanel('graz');
+    }
+
+    // Default open on Graz (Current)
+    renderPanel('graz');
+  </script>
+</body>
+</html>
